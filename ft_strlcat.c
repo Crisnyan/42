@@ -1,34 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strcat.c                                        :+:      :+:    :+:   */
+/*   strlcat.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cristian <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/23 01:34:30 by cristian          #+#    #+#             */
-/*   Updated: 2023/08/24 02:47:38 by cristian         ###   ########.fr       */
+/*   Created: 2023/08/24 01:32:26 by cristian          #+#    #+#             */
+/*   Updated: 2023/08/24 02:45:32 by cristian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-char	*ft_strcat(char *dest, char *src)
+unsigned int	ft_strlcat(char *dest, char *src, unsigned int size)
 {
-	int	i;
-	int	j;
+	unsigned int	i;
+	unsigned int	j;
 
-	i = 0;
 	j = 0;
+	i = 0;
 	while (dest[i] != '\0')
 	{
 		i++;
 	}
-	while (src[j] != '\0')
+	while (src[j] != '\0' && j < size - 1 && size != 0)
 	{
 		dest[i] = src[j];
 		i++;
 		j++;
 	}
 	dest[i] = '\0';
-	return (dest);
+	return (i);
 }
 /*
 #include <stdio.h>
@@ -38,6 +38,6 @@ int	main(void)
 	char s1[20] = "Hola ";
 	char s2[20] = "que ase";
 
-	printf("%s",ft_strcat(s1,s2));	
+	printf("%d",ft_strlcat(s1,s2,0));	
 }
-*/	
+*/
