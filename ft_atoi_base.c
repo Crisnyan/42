@@ -6,7 +6,7 @@
 /*   By: cristian <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 01:47:35 by cristian          #+#    #+#             */
-/*   Updated: 2023/08/25 03:04:54 by cristian         ###   ########.fr       */
+/*   Updated: 2023/08/25 14:50:42 by cmanica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,25 @@ int	blen(char *base)
 	return (i);
 }
 
+int	len(int num)
+{
+	int	i;
+
+	i = 1;
+	while (num > 10)
+	{
+		num = num/10;
+		i++;
+	}
+	return (num);
+}
+
 int	ft_atoi_base(char *str, char *base)
 {
 	int	i;
 	int	neg;
 	int	num;
+	int	cum;
 
 	neg = 0;
 	num = 0;
@@ -54,14 +68,17 @@ int	ft_atoi_base(char *str, char *base)
 	}
 	while (str[i] >= 48  && str[i] <= 57)
 	{	
-		num *= blen(base);
+		num *= 10;
 		num = (str[i] - 48);
-		num += num / blen(base);
-		num *= blen(base);
-		num += num % blen(base);
 		i++;
 	}
-// hace falta implementar correctamente la conversion 
+	i = 0;
+	cum = 0;
+	while (i < len(num))
+	{
+	cum = ((num / 10**(len(num) - i)) % 10) * (len(num) - 1) * blen(base)**i;
+	}
+	// HAY QUE HACER UNA FUNCION QUE EXPONENCIE a^b T_T
 	neg = neg % 2;
 	if (neg == 1)
 	{
