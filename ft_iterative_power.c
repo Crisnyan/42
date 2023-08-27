@@ -1,53 +1,49 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   ft_iterative_power.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cristian <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/24 22:57:49 by cristian          #+#    #+#             */
-/*   Updated: 2023/08/25 23:13:54 by cristian         ###   ########.fr       */
+/*   Created: 2023/08/26 01:17:26 by cristian          #+#    #+#             */
+/*   Updated: 2023/08/26 01:26:33 by cristian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	ft_atoi(char *str)
+int	ft_iterative_power(int nb, int power)
 {
-	int	i;
-	int	neg;
 	int	num;
 
-	neg = 0;
-	num = 0;
-	while (!(str[i] >= 48 && str[i] <= 57))
+	num = 1;
+	if (power > 0)
 	{
-		if (str[i] == '-')
+		while (power > 0)
 		{
-			neg++;
+			num *= nb;
+			power--;
 		}
-		i++;
 	}
-	while (str[i] >= 48 && str[i] <= 57)
-	{
-		num *= 10;
-		num += str[i] - 48;
-		i++;
-	}
-	neg = neg % 2;
-	if (neg == 1)
-		num = -num;
+	if (power < 0)
+		return (0);
+	if (nb == 0 && power == 0)
+		return (1);
 	return (num);
 }
 /*
-#include <stdlib.h>
 #include <stdio.h>
 
 int main(void)
 {
-	char *str;
+	int a;
+	int b;
+	int c;
+	int d;
 
-	str = "   -+---+-1234ab5678";
-	printf("%d \n", ft_atoi(str));
-// por algun motivo la funcion atoi original no parece funcionar con " " o "+"
-	printf("%d", atoi(str));
+	a = 7;
+	b = 2;
+	c = 0;
+	d = 0;
+	printf("%d \n", ft_iterative_power(a,b));
+	printf("%d \n", ft_iterative_power(c,d));
 }
 */

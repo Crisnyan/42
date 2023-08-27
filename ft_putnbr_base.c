@@ -6,11 +6,12 @@
 /*   By: cristian <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 00:36:01 by cristian          #+#    #+#             */
-/*   Updated: 2023/08/25 02:08:13 by cristian         ###   ########.fr       */
+/*   Updated: 2023/08/26 01:07:41 by cristian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
+
 int	blen(char *base)
 {
 	int	i;
@@ -24,9 +25,9 @@ int	blen(char *base)
 			return (0);
 		}
 		k = 0;
-		while (base[k] != '\0' && base[k] != base[i])
+		while (base[k] != '\0')
 		{
-			if (base[k]  == base[i])
+			if (base[k] == base[i] && k != i)
 			{
 				return (0);
 			}
@@ -63,7 +64,7 @@ void	ft_putnbr_base(int nbr, char *base)
 		write(1, &result, 1);
 	}
 }
-
+/*
 int	main(void)
 {
 	int	num;
@@ -74,4 +75,4 @@ int	main(void)
 
 	ft_putnbr_base(num, base);
 }
-
+*/
