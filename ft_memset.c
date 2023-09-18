@@ -1,26 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_memset.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cristian <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/15 01:52:02 by cristian          #+#    #+#             */
-/*   Updated: 2023/09/17 23:23:40 by cristian         ###   ########.fr       */
+/*   Created: 2023/09/15 15:31:02 by cristian          #+#    #+#             */
+/*   Updated: 2023/09/18 02:47:40 by cristian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-size_t	ft_strlen(const char *s)
+#include <stddef.h>
+
+void	*ft_memset(void *ptr, int c, size_t n)
 {
-	int	i;
+	size_t	i;
+	char	*str;
 
 	i = 0;
-	while (*str != '\0')
+	str = (char *)ptr;
+	while (i < n)
 	{
-		i++;
+		*str = c;
 		str++;
+		i++;
 	}
-	return (i);
+	return (ptr);
 }
 /*
 #include <stdio.h>
@@ -30,22 +35,23 @@ size_t	ft_strlen(const char *s)
 int main(void)
 {
 	int i = 0;
-	char str[] = "12345";
-
-	str[0] = i;	
-	printf("%d\n", ft_strlen(str));
-	printf("%d\n", ft_strlen("\n"));
-	printf("%d\n", ft_strlen("1"));
-	printf("%ld\n", strlen(str));
-	printf("%ld\n", strlen("\n"));
-	printf("%ld\n", strlen("1"));
+	char str1[500] = "";
+	char str3[500] = "";
+	int str2;
+	char *string;
+	char *string2;
+	
 	
 	while (i < 128)
 	{
-		str[i] = i;
+		str2 = i;
 		printf("i es: %d\n", i);
-		printf("mia %d\n", ft_strlen(str));
-		printf("tuya %ld\n", strlen(str));
+		memset((void *)str1, str2, i);
+		ft_memset((void *)str3, str2, i);
+		string = (char*)str1; 
+		string2 = (char*)str3; 
+		printf("tuya %s\n", string);
+		printf("mia %s\n", string2);
 		i++;
 	}
 }

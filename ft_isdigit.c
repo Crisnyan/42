@@ -6,13 +6,13 @@
 /*   By: cmanica- <cmanica-@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 12:57:52 by cmanica-          #+#    #+#             */
-/*   Updated: 2023/09/14 16:17:45 by cmanica-         ###   ########.fr       */
+/*   Updated: 2023/09/18 02:50:13 by cristian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	ft_isdigit( int arg)
+int	ft_isdigit( int c)
 {
-	if (48 <= arg && arg <= 57)
+	if (48 <= c && c <= 57)
 	{
 		return (1);
 	}

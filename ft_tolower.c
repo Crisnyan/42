@@ -1,24 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isalpha.c                                       :+:      :+:    :+:   */
+/*   ft_tolower.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmanica- <cmanica-@student.42barcel>       +#+  +:+       +#+        */
+/*   By: cristian <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/13 12:39:45 by cmanica-          #+#    #+#             */
-/*   Updated: 2023/09/17 23:27:34 by cristian         ###   ########.fr       */
+/*   Created: 2023/09/17 22:55:11 by cristian          #+#    #+#             */
+/*   Updated: 2023/09/18 02:49:02 by cristian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	ft_isalpha( int c)
+int	ft_tolower( int arg)
 {
-	if ((c > 64 && c < 91) || (c < 123 && c > 96))
+	if (arg > 64 && arg < 91)
 	{
-		return (1);
+		return (arg + 32);
 	}
 	else
 	{
-		return (0);
+		return (arg);
 	}
 }
 /*
@@ -27,11 +27,14 @@ int	ft_isalpha( int c)
 
 int	main(void)
 {
-	printf("%d\n", ft_isalpha('a'));
-	printf("%d\n", ft_isalpha('A'));
-	printf("%d\n", ft_isalpha('1'));
-	printf("%d\n", isalpha('a'));
-	printf("%d\n", isalpha('A'));
-	printf("%d\n", isalpha('1'));
+
+	int i = -250;
+	while (i < 256)
+	{
+		printf("i es: %d\n", i);
+		printf("mia %c\n", ft_tolower(i));
+		printf("tuya %c\n", tolower(i));
+		i++;
+	}
 }
 */

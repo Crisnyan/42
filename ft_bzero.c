@@ -1,51 +1,56 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_bzero.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cristian <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/15 01:52:02 by cristian          #+#    #+#             */
-/*   Updated: 2023/09/17 23:23:40 by cristian         ###   ########.fr       */
+/*   Created: 2023/09/15 18:03:40 by cristian          #+#    #+#             */
+/*   Updated: 2023/09/18 02:40:57 by cristian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-size_t	ft_strlen(const char *s)
+#include <stddef.h>
+
+void	*ft_bzero(void *ptr, size_t n)
 {
-	int	i;
+	size_t	i;
+	char	*str;
 
 	i = 0;
-	while (*str != '\0')
+	str = (char *)ptr;
+	while (i < n) 
 	{
+		str[i] = '\0';
 		i++;
-		str++;
 	}
-	return (i);
+	return (ptr);
 }
 /*
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
+
 int main(void)
 {
 	int i = 0;
-	char str[] = "12345";
-
-	str[0] = i;	
-	printf("%d\n", ft_strlen(str));
-	printf("%d\n", ft_strlen("\n"));
-	printf("%d\n", ft_strlen("1"));
-	printf("%ld\n", strlen(str));
-	printf("%ld\n", strlen("\n"));
-	printf("%ld\n", strlen("1"));
+	char *string;
+	char *string2;
+	char str1[27] = "abcdefghijklmnopqrstuvwxyz";
+	char str2[27] = "abcdefghijklmnopqrstuvwxyz";		
 	
-	while (i < 128)
+	while (i < 30)
 	{
-		str[i] = i;
+
+	
 		printf("i es: %d\n", i);
-		printf("mia %d\n", ft_strlen(str));
-		printf("tuya %ld\n", strlen(str));
+		bzero((void *)str1, i);
+		ft_bzero((void *)str2, i);
+		string = (char*)str1; 
+		string2 = (char*)str2; 
+		printf("tuya %s\n", string + i - 1);
+		printf("mia %s\n", string2 + i - 1);
 		i++;
 	}
 }

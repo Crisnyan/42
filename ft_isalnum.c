@@ -6,15 +6,14 @@
 /*   By: cmanica- <cmanica-@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 17:35:44 by cmanica-          #+#    #+#             */
-/*   Updated: 2023/09/14 17:52:20 by cmanica-         ###   ########.fr       */
+/*   Updated: 2023/09/17 23:27:18 by cristian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
-int	ft_isalnum( int arg)
+int	ft_isalnum( int c)
 {
-	if (((arg > 64 && arg < 91) || (arg < 123 && arg > 96)) ||
-		(48 <= arg && arg <= 57))
+	if (((c > 64 && c < 91) || (c < 123 && c > 96))
+		|| (48 <= c && c <= 57))
 	{
 		return (1);
 	}
@@ -23,6 +22,7 @@ int	ft_isalnum( int arg)
 		return (0);
 	}
 }
+/*
 #include <stdio.h>
 #include <ctype.h>
 
@@ -45,3 +45,4 @@ int	main(void)
 		i++;
 	}
 }
+*/
