@@ -6,19 +6,21 @@
 /*   By: cristian <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 01:52:02 by cristian          #+#    #+#             */
-/*   Updated: 2023/09/17 23:23:40 by cristian         ###   ########.fr       */
+/*   Updated: 2023/09/18 15:28:58 by cmanica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include <stddef.h>
 
 size_t	ft_strlen(const char *s)
 {
 	int	i;
 
 	i = 0;
-	while (*str != '\0')
+	while (*s != '\0')
 	{
 		i++;
-		str++;
+		s++;
 	}
 	return (i);
 }

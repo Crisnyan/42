@@ -6,7 +6,7 @@
 /*   By: cristian <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 18:03:40 by cristian          #+#    #+#             */
-/*   Updated: 2023/09/18 02:40:57 by cristian         ###   ########.fr       */
+/*   Updated: 2023/09/18 16:19:17 by cmanica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	*ft_bzero(void *ptr, size_t n)
 
 	i = 0;
 	str = (char *)ptr;
-	while (i < n) 
+	while (i < n)
 	{
 		str[i] = '\0';
 		i++;

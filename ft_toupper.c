@@ -6,7 +6,7 @@
 /*   By: cristian <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 22:37:21 by cristian          #+#    #+#             */
-/*   Updated: 2023/09/18 02:48:18 by cristian         ###   ########.fr       */
+/*   Updated: 2023/09/18 15:55:37 by cmanica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	main(void)
 {
 
 	int i = -300;
-	while (i < 0)
+	while (i < 128)
 	{
 		printf("i es: %d\n", i);
 		printf("mia %c\n", ft_toupper(i));
