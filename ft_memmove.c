@@ -6,28 +6,35 @@
 /*   By: cmanica- <cmanica-@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 16:54:18 by cmanica-          #+#    #+#             */
-/*   Updated: 2023/09/18 18:04:31 by cmanica-         ###   ########.fr       */
+/*   Updated: 2023/09/28 05:04:07 by cristian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stddef.h>
 
-void	*ft_memmove(void *dst, const void *src, size_t n)
+void	*ft_memmove(void *dst, const void *src, size_t len)
 {
+	char	*d;
+	char	*s;
 	size_t	i;
-	char	*str;
-	char	*str2;
 
+	d = (char *)dst;
+	s = (char *)src;
 	i = 0;
-	str = (char *)dst;
-	str2 = (char *)src;
-	while (i < n && src && dst)
+	if (!d && !s)
+		return (0);
+	else if (d > s)
 	{
-		if (!src && !dst)
-			return (0);
-		else
+		while (len-- > 0)
 		{
-			*(str++) = *(str2++);
+			d[len] = s[len];
+		}
+	}
+	else
+	{
+		while (i < len) 
+		{
+			d[i] = s[i];
 			i++;
 		}
 	}
@@ -40,23 +47,9 @@ void	*ft_memmove(void *dst, const void *src, size_t n)
 
 int main(void)
 {
-	int i = 0;
-
-	while (i < 29)
-	{
-		char str1[30] = "hey hey hey aqui el rich";
-		char str2[28] = "hello my friend, here we go";
-		char str3[30] = "hei hei hei aqui el rich";
-		char *string;
-		char *string2;
-		printf("i es %d\n", i);
-		memmove((void *)str1, (void *)str2, i);
-		ft_memmove((void *)str3, (void *)str2, i);
-		string = (char*)str1; 
-		string2 = (char*)str3;
-		printf("tuya %s\n", string);
-		printf("mia %s\n", string2);
-		i++;
-	}
+	size_t size = 10;
+ 
+ 	printf("memmove 1: %s \n", (char *)memmove((void *)0, (void *)0, size));
+ 	printf("memmove 2: %s \n ", (char *)ft_memmove((void *)0, (void *)0, size));
 }
 */

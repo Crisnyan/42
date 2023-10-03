@@ -1,31 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memset.c                                        :+:      :+:    :+:   */
+/*   ft_strlcpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cristian <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/15 15:31:02 by cristian          #+#    #+#             */
-/*   Updated: 2023/09/25 15:40:49 by cristian         ###   ########.fr       */
+/*   Created: 2023/09/30 16:50:04 by cristian          #+#    #+#             */
+/*   Updated: 2023/10/02 00:11:40 by cristian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stddef.h>
+#include "libft.h"
 
-void	*ft_memset(void *dst, int c, size_t n)
+size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 {
 	size_t	i;
-	char	*str;
 
 	i = 0;
-	str = (char *)dst;
-	while (i < n)
+	if (size == 0)
+		return (ft_strlen(src));
+	while (i < size - 1 && src[i])
 	{
-		*str = c;
-		str++;
+		dst[i] = src[i];
 		i++;
 	}
-	return (dst);
+	dst[i] = 0;
+	return (ft_strlen(src));
 }
 /*
 #include <stdio.h>
@@ -34,25 +35,17 @@ void	*ft_memset(void *dst, int c, size_t n)
 
 int main(void)
 {
-	int i = 0;
-	char str1[5000] = "";
-	char str3[5000] = "";
-	int str2;
+	size_t i = 10;
+	char str1[23] = "";
+	char str2[6] = "";
+	char str3[23] = "";
 	char *string;
 	char *string2;
-	
-	
-	while (i < 200)
-	{
-		str2 = i;
-		printf("i es: %d\n", i);
-		memset((void *)str1, str2, i);
-		ft_memset((void *)str3, str2, i);
-		string = (char*)str1; 
-		string2 = (char*)str3; 
-		printf("tuya %s\n", string);
-		printf("mia %s\n", string2);
-		i++;
-	}
+	g_strlcpy((char *)str1, (char *)str2, i);
+	ft_strlcpy((char *)str3, (char *)str2, i);
+	string = (char*)str1; 
+	string2 = (char*)str3;
+	printf("tuya %s\n", string);
+	printf("mia %s\n", string2);
 }
 */

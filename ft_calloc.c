@@ -1,31 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memset.c                                        :+:      :+:    :+:   */
+/*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cristian <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/15 15:31:02 by cristian          #+#    #+#             */
-/*   Updated: 2023/09/25 15:40:49 by cristian         ###   ########.fr       */
+/*   Created: 2023/10/02 01:38:28 by cristian          #+#    #+#             */
+/*   Updated: 2023/10/02 19:02:54 by cristian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
 #include <stddef.h>
+#include "libft.h"
 
-void	*ft_memset(void *dst, int c, size_t n)
+void	*ft_calloc(size_t count, size_t size)
 {
-	size_t	i;
-	char	*str;
+	void	*ptr;
 
-	i = 0;
-	str = (char *)dst;
-	while (i < n)
-	{
-		*str = c;
-		str++;
-		i++;
-	}
-	return (dst);
+	ptr = (void *)malloc(count * size);
+	if (!ptr)
+		return (NULL);
+	ft_bzero(ptr, size * count);
+	return (ptr);
 }
 /*
 #include <stdio.h>
@@ -35,23 +32,12 @@ void	*ft_memset(void *dst, int c, size_t n)
 int main(void)
 {
 	int i = 0;
-	char str1[5000] = "";
-	char str3[5000] = "";
-	int str2;
-	char *string;
-	char *string2;
-	
 	
 	while (i < 200)
 	{
-		str2 = i;
 		printf("i es: %d\n", i);
-		memset((void *)str1, str2, i);
-		ft_memset((void *)str3, str2, i);
-		string = (char*)str1; 
-		string2 = (char*)str3; 
-		printf("tuya %s\n", string);
-		printf("mia %s\n", string2);
+		printf("tuya %s\n", (char *)calloc(i, i));
+		printf("mia %s\n", (char *)ft_calloc(i, i));
 		i++;
 	}
 }

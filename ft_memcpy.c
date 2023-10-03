@@ -6,9 +6,10 @@
 /*   By: cristian <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 00:47:24 by cristian          #+#    #+#             */
-/*   Updated: 2023/09/18 16:54:56 by cmanica-         ###   ########.fr       */
+/*   Updated: 2023/09/30 16:49:39 by cristian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include <stddef.h>
 
 void	*ft_memcpy(void *dest, const void *src, size_t n)

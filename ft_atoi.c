@@ -6,36 +6,46 @@
 /*   By: cristian <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 22:57:49 by cristian          #+#    #+#             */
-/*   Updated: 2023/08/25 23:13:54 by cristian         ###   ########.fr       */
+/*   Updated: 2023/10/02 01:18:27 by cristian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	ft_atoi(char *str)
+#include "libft.h"
+
+int	ft_isspace(char c)
+{
+	if (c == 32 || (c > 8 && c < 14))
+		return (1);
+	return (0);
+}
+
+int	ft_atoi(const char *str)
 {
 	int	i;
-	int	neg;
-	int	num;
+	int	signal;
+	int	nbr;
 
-	neg = 0;
-	num = 0;
-	while (!(str[i] >= 48 && str[i] <= 57))
+	i = 0;
+	signal = 1;
+	nbr = 0;
+	while (ft_isspace(str[i]))
+	{
+		i++;
+	}
+	if (str[i] == '+' || str[i] == '-')
 	{
 		if (str[i] == '-')
 		{
-			neg++;
+			signal = -1;
 		}
 		i++;
 	}
-	while (str[i] >= 48 && str[i] <= 57)
+	while (ft_isdigit(str[i]))
 	{
-		num *= 10;
-		num += str[i] - 48;
+		nbr = nbr * 10 + (str[i] - '0');
 		i++;
 	}
-	neg = neg % 2;
-	if (neg == 1)
-		num = -num;
-	return (num);
+	return (nbr * signal);
 }
 /*
 #include <stdlib.h>

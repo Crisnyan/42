@@ -5,39 +5,30 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: cristian <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/27 17:22:55 by cristian          #+#    #+#             */
-/*   Updated: 2023/08/27 18:46:39 by cristian         ###   ########.fr       */
+/*   Created: 2023/10/02 19:56:46 by cristian          #+#    #+#             */
+/*   Updated: 2023/10/02 19:56:51 by cristian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
+#include "libft.h"
 
-int	l(char *str)
+char	*ft_strdup(const char *s)
 {
-	int	i;
-
-	i = 1;
-	while (str[i] != '\0')
-	{
-		i++;
-	}
-	return (i);
-}
-
-char	*ft_strdup(char *src)
-{
-	int		i;
-	char	*dest;
+	size_t	i;
+	char	*dst;
 
 	i = 0;
-	dest = (char *)malloc(sizeof(char) * (l(src) + 1));
-	while (i < l(src))
+	dst = (char *)malloc(sizeof(char) * (ft_strlen(s) + 1));
+	if (!dst)
+		return (NULL);
+	while (i < ft_strlen(s))
 	{
-		dest[i] = src[i];
+		dst[i] = s[i];
 		i++;
 	}
-	dest[i] = '\0';
-	return (dest);
+	dst[i] = '\0';
+	return (dst);
 }
 /*
 #include <stdio.h>

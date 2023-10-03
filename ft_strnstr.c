@@ -1,46 +1,57 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlcat.c                                       :+:      :+:    :+:   */
+/*   ft_strnstr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cristian <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/24 01:32:26 by cristian          #+#    #+#             */
-/*   Updated: 2023/10/02 00:17:43 by cristian         ###   ########.fr       */
+/*   Created: 2023/10/02 19:55:18 by cristian          #+#    #+#             */
+/*   Updated: 2023/10/02 19:55:22 by cristian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stddef.h>
-#include "libft.h"
 
-size_t	ft_strlcat(char *dst, const char *src, size_t size)
+char	*ft_strnstr(const char *big, const char *little, size_t len)
 {
 	size_t	i;
 	size_t	j;
+	size_t	k;
+	char	*b;
+	char	*l;
 
-	j = 0;
 	i = 0;
-	while (dst[i] && i < size) 
+	b = (char *)big;
+	l = (char *)little;
+	if (l[i] == 0)
+		return (b);
+	while (b[i] && i < len)
 	{
+		j = 0;
+		k = i;
+		while (b[k] != '\0' && k < len)
+		{
+			if (b[k++] != l[j++])
+				break ;
+			if (l[j] == '\0')
+				return (b + i);
+		}
 		i++;
 	}
-	while (src[j] && (i + j + 1) < size)
-	{
-		dst[i + j] = src[j];
-		j++;
-	}
-	if (i != size)
-		dst[i + j] = '\0';
-	return (i + ft_strlen(src));
+	return ('\0');
 }
 /*
 #include <stdio.h>
 
-int	main(void)
+int main(void)
 {
-	char s1[20] = "Hola ";
-	char s2[20] = "que ase";
+	char *s1;
+	char *s2;
 
-	printf("%d",ft_strlcat(s1,s2,0));	
+	s1 = "cafe";
+	s2 = "odio el cafe";
+	ft_strnstr(s2,s1);
+	printf("%s",ft_strnstr(s2, s1));
+	return(0);
 }
-*/
+*/	
