@@ -6,7 +6,7 @@
 /*   By: cmanica- <cmanica-@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 16:19:40 by cmanica-          #+#    #+#             */
-/*   Updated: 2023/10/15 03:45:41 by cristian         ###   ########.fr       */
+/*   Updated: 2023/10/15 16:31:39 by cmanica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 # define LIBFT_H
 # include <stddef.h>
 
-int		ft_islower(int c);
-int		ft_isupper(int c);
 int		ft_isalpha(int c);
 int		ft_isdigit(int c);
 int		ft_isalnum(int c);
@@ -36,7 +34,7 @@ char	*ft_strrchr(const char *s, int c);
 char	*ft_strnstr(const char *big, const char *little, size_t len);
 char	*ft_strdup(const char *s);
 char	*ft_itoa(int n);
-char	*ft_strtrim(char *s1, char const *set);
+char	*ft_strtrim(const char *s1, char const *set);
 char	*ft_strmapi(char const *s, char (*f) (unsigned int, char));
 char	**ft_split(char const *s, char c);
 void	ft_bzero(void *b, size_t n);

@@ -6,7 +6,7 @@
 /*   By: cristian <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/04 23:08:44 by cristian          #+#    #+#             */
-/*   Updated: 2023/10/06 00:09:29 by cristian         ###   ########.fr       */
+/*   Updated: 2023/10/15 15:00:50 by cmanica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ char	*ft_strjoin(const char *s1, const char *s2)
 
 	str = (char *)malloc(sizeof(char) * ft_strlen(s1) + ft_strlen(s2) + 1);
 	if (!str)
-		return ('\0');
+		return (0);
 	i = 0;
 	while (*s1)
 		str[i++] = *(s1++);

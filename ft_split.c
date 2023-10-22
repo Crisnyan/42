@@ -6,102 +6,71 @@
 /*   By: cristian <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:10:50 by cristian          #+#    #+#             */
-/*   Updated: 2023/10/15 05:08:05 by cristian         ###   ########.fr       */
+/*   Updated: 2023/10/15 16:22:15 by cmanica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
+#include "libft.h"
 
-static int	wnum(const char *s, char c)
+static int	words(char const *s, char c)
 {
-	int	i;
-	int	count;
+	size_t	num_words;
 
-	i = 0;
-	count = 0;
-	while (s[i] == c)
-		i++;
-	while (s[i] != 0)
+	num_words = 0;
+	while (*s)
 	{
-		if (s[i++] == c)
-		{
-			while (s[i] == c)
-			{
-				if (s[i + 1] == 0)
-					break ;
-				i++;
-			}
-			count++;
-		}
+		while (*s == c)
+			s++;
+		if (*s != '\0')
+			num_words++;
+		while (*s && *s != c)
+			s++;
 	}
-	if (s[i - 1] != c)
-		count++;
-	return (count);
+	return (num_words);
 }
 
-static int	spos(const char *s, char c, int num)
+static char	**free_array(char **array, size_t pos)
 {
-	int	i;
-	int	k;
+	size_t	i;
 
 	i = 0;
-	k = 0;
-	while (s[i] == c)
-		i++;
-	while (s[i] != 0)
+	while (i < pos)
 	{
-		if (s[i] != c)
-		{
-			k++;
-			if (k - 1 == num)
-				return (i);
-			while (s[i] != c && s[i] != 0)
-				i++;
-		}
+		free(array[i]);
 		i++;
-		if (s[i - 1] == 0)
-			return (i - 1);
 	}
-	return (i);
-}
-
-static char	*row(const char *s, char c, int start)
-{
-	int		end;
-	int		i;
-	char	*str;
-
-	end = start;
-	if (s[end] == 0)
-		return (0);
-	i = 0;
-	while (s[end] != c && s[end] != 0)
-		end++;
-	str = (char *)malloc(sizeof(char) * (end - start + 1));
-	while (start < end)
-		str[i++] = s[start++];
-	str[i] = 0;
-	return (str);
+	free(array);
+	return (NULL);
 }
 
 char	**ft_split(char const *s, char c)
 {
-	char	**mat;
-	int		i;
-	int		num;
+	char	**result;
+	size_t	start;
+	size_t	pos;
+	size_t	i;
 
-	num = wnum(s, c);
+	result = malloc(sizeof(char *) * (words(s, c) + 1));
+	if (!result)
+		return (NULL);
 	i = 0;
-	if (!s)
-		return (0);
-	mat = (char **)malloc(sizeof(char *) * (num + 1));
-	while (i < num)
+	pos = 0;
+	start = 0;
+	while (s[i])
 	{
-		mat[i] = (row(s, c, spos(s, c, i)));
+		if (i > 0 && s[i] != c && s[i - 1] == c)
+			start = i;
+		if (s[i] != c && (s[i + 1] == c || s[i + 1] == '\0'))
+		{
+			result[pos++] = ft_substr(s, start, i - start + 1);
+			if (!result[pos - 1])
+				return (free_array(result, pos - 1));
+		}
 		i++;
 	}
-	mat[i] = 0;
-	return (mat);
+	result[pos] = NULL;
+	return (result);
 }
 /*
 #include <stdio.h>

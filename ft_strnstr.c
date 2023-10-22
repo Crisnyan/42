@@ -6,7 +6,7 @@
 /*   By: cristian <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/02 19:55:18 by cristian          #+#    #+#             */
-/*   Updated: 2023/10/02 19:55:22 by cristian         ###   ########.fr       */
+/*   Updated: 2023/10/15 14:59:39 by cmanica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char	*ft_strnstr(const char *big, const char *little, size_t len)
 		}
 		i++;
 	}
-	return ('\0');
+	return (0);
 }
 /*
 #include <stdio.h>

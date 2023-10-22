@@ -6,7 +6,7 @@
 /*   By: cristian <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 22:28:45 by cristian          #+#    #+#             */
-/*   Updated: 2023/10/01 23:13:41 by cristian         ###   ########.fr       */
+/*   Updated: 2023/10/15 14:58:52 by cmanica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	*ft_strchr(const char *s, int c)
 	}
 	if ((char)c == '\0')
 		return (&str[i]);
-	return ('\0');
+	return (0);
 }
 /*
 #include <stdio.h>

@@ -6,12 +6,13 @@
 /*   By: cristian <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/03 22:51:06 by cristian          #+#    #+#             */
-/*   Updated: 2023/10/11 02:08:58 by cristian         ###   ########.fr       */
+/*   Updated: 2023/10/15 15:31:58 by cmanica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <stdlib.h>
+#include "libft.h"
 
 static int	e(int n, int exp)
 {
@@ -48,24 +49,13 @@ static int	lin(int n)
 	return (len);
 }
 
-char	*ft_itoa(int n)
+char	*loop(int n, int num, int neg)
 {
-	char	*str;
 	int		i;
-	int		neg;
-	int		num;
+	char	*str;
 
-	neg = 1;
 	i = 0;
-	num = lin(n);
-	if (n < 0)
-		neg++;
-	if (n == -2147483648)
-	{
-		str = (char *)malloc(sizeof(char) * 12);
-		return (str = "-2147483648");
-	}
-	str = (char *)malloc(sizeof(char) * num + (1 * neg));
+	str = malloc(sizeof(char) * num + (1 * neg));
 	if (str == NULL)
 		return (NULL);
 	while (i - 1 + (1 * neg) < num - 1 + (1 * neg))
@@ -80,6 +70,21 @@ char	*ft_itoa(int n)
 	}
 	str[i - 1 + (1 * neg)] = '\0';
 	return (str);
+}
+
+char	*ft_itoa(int n)
+{
+	int		neg;
+	int		num;
+	char	*str;
+
+	neg = 1;
+	num = lin(n);
+	if (n < 0)
+		neg++;
+	if (n == -2147483648)
+		return (str = ft_strdup("-2147483648"));
+	return (loop(n, num, neg));
 }
 /*
 #include <stdio.h>

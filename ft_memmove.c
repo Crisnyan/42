@@ -6,7 +6,7 @@
 /*   By: cmanica- <cmanica-@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 16:54:18 by cmanica-          #+#    #+#             */
-/*   Updated: 2023/09/28 05:04:07 by cristian         ###   ########.fr       */
+/*   Updated: 2023/10/15 15:32:27 by cmanica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	*ft_memmove(void *dst, const void *src, size_t len)
 	}
 	else
 	{
-		while (i < len) 
+		while (i < len)
 		{
 			d[i] = s[i];
 			i++;
