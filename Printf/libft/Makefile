@@ -16,11 +16,11 @@ SRC = ft_bzero.c ft_isalnum.c ft_isalpha.c ft_isascii.c ft_isdigit.c \
 
 OBJ = $(SRC:.c=.o)
 
-all: $(NAME)
-	@echo "build complete"
+all: $(NAME) Makefile
+	@echo "build for $(NAME) complete"
 
 $(NAME): $(OBJ)
-	@echo "Creating library: $@"
+	@echo "Creating library $(NAME): $@"
 	ar -rcs $(NAME) $(OBJ)
 
 %.o: %.c $(INCLUDES)
@@ -28,12 +28,12 @@ $(NAME): $(OBJ)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
+	@echo "Cleaning up $(NAME)"
 	rm -rf $(OBJ)
-	@echo "Cleaning up"
 
 fclean: clean
+	@echo "Force cleaning $(NAME)"
 	rm -rf $(NAME)
-	@echo "Force cleaning"
 
 re: fclean all
 
