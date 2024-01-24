@@ -6,12 +6,13 @@
 /*   By: cristian <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/27 21:49:08 by cristian          #+#    #+#             */
-/*   Updated: 2023/12/31 17:39:56 by cristian         ###   ########.fr       */
+/*   Updated: 2024/01/24 18:06:16 by cmanica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <stdarg.h>
+#include <stdio.h>
 #include "libft/libft.h"
 #include "ft_printf.h"
 
@@ -31,7 +32,7 @@ int	sizestr(char *str, int fd)
 	return ((int)ft_strlen(str));
 }
 
-long long unsigned int	e(int nb, int power)
+long long unsigned int e(int nb, int power)
 {
 	long long unsigned int	num;
 
@@ -57,6 +58,16 @@ int	sizeint(int num, int fd)
 
 	if (!num)
 		return (-1);
+	if (num == 2147483647)
+		return (ft_putstr_fd("2147483647", fd), 10);
+	if (num == -2147483648)
+		return (ft_putstr_fd("-2147483648", fd), 11);
+	if (num < 0)
+	{
+		ft_putchar_fd('-', fd);
+		num = -num;
+		i = 1;
+	}
 	i = 0;
 	while (num / e(10, i))
 		i++;
@@ -85,6 +96,6 @@ int	sizeuint(unsigned int num, int fd)
 /*
 int	main(void)
 {
-	printf("\nel numero tiene %d digitos", sizeuint(INT_MAX, 1));
+	printf("\nel numero tiene %d digitos", sizeint(-6, 1));
 }
 */

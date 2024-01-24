@@ -1,31 +1,38 @@
 NAME = libftprintf.a
+CC = cc
 CFLAGS = -Wall -Werror -Wextra
-IFLAGS = -Ilibft
 INCLUDES = ft_printf.h
+MAKE = libft.a
 SRCS = ft_printf.c casos.c basics.c hex.c
 OBJS = $(SRCS:.c=.o)
 
-$(NAME):$(OBJS) Makefile
-	make -C libft
-	cp libft/libft.a .
-	mv libft.a $(NAME)
-	ar -rcs $(NAME) $(OBJS)
-	@echo "build for $(NAME) complete"
-
-all:$(NAME) 
+all:$(MAKE) $(NAME) 
 	@echo "Creating library $(NAME): $@"
 
+$(NAME): MAKE $(OBJS) $(INCLUDES)  Makefile	
+	
+	cp libft/libft.a $(NAME)
+	ar -rcs $(NAME) $(OBJS) 
+	@echo "=========== BUILD FOR $(NAME) COMPLETE =============="
+
+MAKE:
+	@echo "================== CREANDO LIBFT ===================="
+	make -C libft
+
+
 %.o: %.c $(INCLUDE) 
-	@echo "Compiling $<"
-	cc -c $(CFLAGS) $(IFLAGS) $< -o $@
+	@echo "=================== Compiling $< ===================="
+	cc -c $(CFLAGS) $< -o $@
 
 clean:
 	@echo "Cleaning up $(NAME)"
 	rm -f $(OBJS)
 	make -C libft clean
-
-fclean: clean
-	@echo "Force cleaning $(NAME)"
+fclean:
+	@echo "================== CLEANING UP $(NAME) =================="
+	rm -f $(OBJS)
+	make -C libft clean
+	@echo "================== FORCE CLEANING $(NAME) ==============="
 	rm -f $(NAME)
 	make -C libft fclean
 
