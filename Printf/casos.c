@@ -6,7 +6,7 @@
 /*   By: cristian <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 16:30:19 by cristian          #+#    #+#             */
-/*   Updated: 2024/01/03 18:06:38 by cmanica-         ###   ########.fr       */
+/*   Updated: 2024/01/25 14:09:36 by cmanica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@ int	casos(const char *format, va_list args)
 	if (*format == 'i')
 		return (sizeint(va_arg(args, int), 1));
 	if (*format == 'x')
-		return (sizelilhex(va_arg(args, long int), 1));
+		return (sizelilhex(va_arg(args, unsigned long long int), 1));
 	if (*format == 'X')
-		return (sizebighex(va_arg(args, long int), 1));
+		return (sizebighex(va_arg(args, unsigned long long int), 1));
 	if (*format == 'u')
 		return (sizeuint(va_arg(args, unsigned int), 1));
 	if (*format == 'p')

@@ -6,7 +6,7 @@
 /*   By: cristian <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 03:18:29 by cristian          #+#    #+#             */
-/*   Updated: 2024/01/03 18:43:32 by cmanica-         ###   ########.fr       */
+/*   Updated: 2024/01/25 15:17:25 by cmanica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,5 +23,5 @@ int							sizestr(char *str, int fd);
 int							sizelilhex(unsigned long long int num, int fd);
 int							sizebighex(unsigned long long int num, int fd);
 int							sizeptr(void *ptr, int fd);
-long long unsigned int		e(int nb, int power);
+char						*ntos(unsigned long long num, char *base);
 #endif

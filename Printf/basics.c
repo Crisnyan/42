@@ -6,20 +6,20 @@
 /*   By: cristian <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/27 21:49:08 by cristian          #+#    #+#             */
-/*   Updated: 2024/01/24 18:06:16 by cmanica-         ###   ########.fr       */
+/*   Updated: 2024/01/25 18:00:31 by cmanica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
 #include "libft/libft.h"
 #include "ft_printf.h"
 
 int	sizechar(char c, int fd)
 {
-	if (!c)
-		return (-1);
 	ft_putchar_fd(c, fd);
 	return (1);
 }
@@ -27,75 +27,84 @@ int	sizechar(char c, int fd)
 int	sizestr(char *str, int fd)
 {
 	if (!str)
-		return (-1);
+	{
+		ft_putstr_fd("(null)", fd);
+		return (6);
+	}
 	ft_putstr_fd(str, fd);
 	return ((int)ft_strlen(str));
 }
 
-long long unsigned int e(int nb, int power)
+char	*ntos(unsigned long long num, char *base)
 {
-	long long unsigned int	num;
+	char				*str;
+	int					nlen;
+	int					blen;
+	unsigned long long	num2;
 
-	num = 1;
-	if (power > 0)
+	blen = (int)ft_strlen(base);
+	nlen = 1;
+	num2 = num;
+	while (num2 >= (unsigned long long)blen)
 	{
-		while (power > 0)
-		{
-			num *= nb;
-			power--;
-		}
+		num2 /= (unsigned long long)blen;
+		nlen++;
 	}
-	if (power < 0)
-		return (0);
-	if (nb == 0 && power == 0)
-		return (1);
-	return (num);
-}
-
-int	sizeint(int num, int fd)
-{
-	int	i;
-
-	if (!num)
-		return (-1);
-	if (num == 2147483647)
-		return (ft_putstr_fd("2147483647", fd), 10);
-	if (num == -2147483648)
-		return (ft_putstr_fd("-2147483648", fd), 11);
-	if (num < 0)
+	str = ft_calloc((nlen + 1), sizeof(char));
+	if (!str)
+		return (NULL);
+	while (nlen)
 	{
-		ft_putchar_fd('-', fd);
-		num = -num;
-		i = 1;
+		nlen--;
+		str[nlen] = base[num % blen];
+		num /= blen;
 	}
-	i = 0;
-	while (num / e(10, i))
-		i++;
-	ft_putnbr_fd(num, fd);
-	return (i);
+	return (str);
 }
 
 int	sizeuint(unsigned int num, int fd)
 {
-	int	i;
-	int	x;
+	char	*str;
+	int		size;
 
+	if (num == 0)
+		return (ft_putstr_fd("0", fd), 1);
 	if (!num)
 		return (-1);
-	i = 0;
-	while (num / e(10, i))
-		i++;
-	x = 1;
-	while (x <= i)
+	str = ntos(num, "0123456789");
+	size = (int)ft_strlen(str);
+	ft_putstr_fd(str, fd);
+	free(str);
+	return (size);
+}
+
+int	sizeint(int num, int fd)
+{
+	char	*str;
+
+	if (num == 0)
+		return (ft_putstr_fd("0", fd), 1);
+	if (!num)
+		return (-1);
+	if (num < 0)
 	{
-		ft_putchar_fd((num / e(10, i - x) % 10) + '0', fd);
-		x++;
+		ft_putchar_fd('-', fd);
+		num = -num;
+		str = ntos(num, "0123456789");
+		free(str);
+		return (sizeuint(num, fd) + 1);
 	}
-	return (i);
+	else
+	{
+		str = ntos(num, "0123456789");
+		free(str);
+		return (sizeuint(num, fd));
+	}
 }
 /*
-int	main(void)
-{
-	printf("\nel numero tiene %d digitos", sizeint(-6, 1));
-}
-*/
+   int	main(void)
+   {
+   printf("\nel numero tiene %d digitos", sizeint(-0, 1));
+   printf("\nel numero tiene %d digitos", sizeint(0, 1));
+   }
+   */
