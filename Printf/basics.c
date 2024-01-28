@@ -6,7 +6,7 @@
 /*   By: cristian <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/27 21:49:08 by cristian          #+#    #+#             */
-/*   Updated: 2024/01/25 18:00:31 by cmanica-         ###   ########.fr       */
+/*   Updated: 2024/01/28 18:04:57 by cmanica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,20 +20,25 @@
 
 int	sizechar(char c, int fd)
 {
-	ft_putchar_fd(c, fd);
+	if (write(fd, &c, 1) == -1)
+		return (-1);
 	return (1);
 }
-
 int	sizestr(char *str, int fd)
 {
+	int i;
+
+	i = 0;
 	if (!str)
+		str = "(null)";
+	while (*str != '\0')
 	{
-		ft_putstr_fd("(null)", fd);
-		return (6);
+		i += sizechar(*str, fd);
+		str++;
 	}
-	ft_putstr_fd(str, fd);
-	return ((int)ft_strlen(str));
+	return (i);
 }
+
 
 char	*ntos(unsigned long long num, char *base)
 {
@@ -42,7 +47,7 @@ char	*ntos(unsigned long long num, char *base)
 	int					blen;
 	unsigned long long	num2;
 
-	blen = (int)ft_strlen(base);
+	blen = ft_strlen(base);
 	nlen = 1;
 	num2 = num;
 	while (num2 >= (unsigned long long)blen)
@@ -50,9 +55,9 @@ char	*ntos(unsigned long long num, char *base)
 		num2 /= (unsigned long long)blen;
 		nlen++;
 	}
-	str = ft_calloc((nlen + 1), sizeof(char));
+	str = malloc((size_t)nlen + 1);
 	if (!str)
-		return (NULL);
+		return (0x0);
 	while (nlen)
 	{
 		nlen--;
@@ -62,18 +67,18 @@ char	*ntos(unsigned long long num, char *base)
 	return (str);
 }
 
-int	sizeuint(unsigned int num, int fd)
+int	sizeuint(unsigned int num, int fd) 
 {
 	char	*str;
 	int		size;
 
 	if (num == 0)
-		return (ft_putstr_fd("0", fd), 1);
+		return (sizechar('0', fd));
 	if (!num)
 		return (-1);
 	str = ntos(num, "0123456789");
 	size = (int)ft_strlen(str);
-	ft_putstr_fd(str, fd);
+	sizestr(str, fd);
 	free(str);
 	return (size);
 }
@@ -83,12 +88,12 @@ int	sizeint(int num, int fd)
 	char	*str;
 
 	if (num == 0)
-		return (ft_putstr_fd("0", fd), 1);
+		return (sizechar('0', fd));
 	if (!num)
 		return (-1);
 	if (num < 0)
 	{
-		ft_putchar_fd('-', fd);
+		pf_putchar_fd('-', fd);
 		num = -num;
 		str = ntos(num, "0123456789");
 		free(str);

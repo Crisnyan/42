@@ -3,7 +3,7 @@ CC = cc
 CFLAGS = -Wall -Werror -Wextra
 INCLUDES = ft_printf.h
 MAKE = libft.a
-SRCS = ft_printf.c casos.c basics.c hex.c
+SRCS = ft_printf.c casos.c aux.c basics.c hex.c
 OBJS = $(SRCS:.c=.o)
 
 all:$(MAKE) $(NAME) 
