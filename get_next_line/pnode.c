@@ -2,10 +2,9 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <fcntl.h>
-#include <string.h>
 #include "aux.c"
 
-#define BUFFER_SIZE 5
+#define BUFFER_SIZE 4
 
 typedef struct	partget
 {
@@ -13,18 +12,40 @@ typedef struct	partget
 	struct partget	*arrow;
 }part;
 
+int	findnl(char *buff)
+{
+	int	i;
+
+	i = 0;
+	while (i < BUFFER_SIZE)
+	{
+		if (*buff == '\n')
+			return (i);
+		buff++;
+		i++;
+	}
+	return (-1);
+}
+
 part	create(char *buff, part *ptr)
 {
 	part	part;
+	int	check;
+	char	*str;
 
 	ptr = &part;
-	ptr->node = strdup(buff);
+	check = findnl(buff);
+	if (check != -1)
+		while (check++ < BUFFER_SIZE)
+			 *buff = 0;
+	str = ft_strdup(buff);
+	ptr->node = str;
 	ptr->arrow = 0;
 	return (part);
 }
 
 
-char	*getstr(part *head)
+char	*getstr(part *head, char *buff)
 {
 	part	*ptr;
 	int	num;
@@ -39,40 +60,45 @@ char	*getstr(part *head)
 	}
 	printf("%d\n", num);
 	ptr = head;
-	str = malloc(num * BUFFER_SIZE);
+	str = malloc((num - 1)* BUFFER_SIZE + findnl(buff) + 1);
 	while (--num > -1)
 	{
-		str = strjoin(str, ptr->node);
+		str = ft_strjoin(str, ptr->node);
 		ptr = ptr->arrow;
 	}
+		str = ft_strjoin(str, "\0");
 	return (str);
 }
 
-int	findnl(char *buff)
+char	*clearbuff(char *buff)
 {
 	int	i;
 
 	i = 0;
-	while (i < BUFFER_SIZE)
+	while (i < findnl(buff))
 	{
-		if (buff[i] == ('\n' || '\0'))
-			return (1);
+		*buff = 0;
+		buff++;
 		i++;
 	}
-	return (0);
+	return (buff);
 }
-
+		
+		
 char	*get_next_line(int fd)
 {
-	part	*head;
+	part		*head;
 	part		*prev;
 	part		*next;
 	static char	*buff;
+	char		*str;
+	int			i;
 
-	if (!buff)
-		buff = malloc(BUFFER_SIZE);
 	head = 0;
-	while (findnl(buff) == 0)
+	buff = malloc(BUFFER_SIZE);
+	i = 0;
+	prev = 0;
+	while (i < 5)
 	{
 		read(fd, buff, BUFFER_SIZE);
 		next = (part *)malloc(sizeof(part));
@@ -84,14 +110,17 @@ char	*get_next_line(int fd)
 		if (prev)
 			prev->arrow = next;
 		prev = next;
+		i++;
+		printf("BUFF IN: %s\n", buff);
 	}
-	return (getstr(head));
+	str = getstr(head, buff);
+	return (str);
 }
 
 int main(void)
 {
-	int libro;
+	int	libro;
 
-	libro = open("bee.txt", O_RDONLY);
-	printf("%s", get_next_line(libro));
+		libro = open("bee.txt", O_RDONLY);
+		printf("%s", get_next_line(libro));
 }

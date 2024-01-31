@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+/**************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   ft_printf.c                                        :+:      :+:    :+:   */
@@ -6,7 +6,7 @@
 /*   By: cristian <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 05:18:24 by cristian          #+#    #+#             */
-/*   Updated: 2024/01/31 16:52:29 by cmanica-         ###   ########.fr       */
+/*   Updated: 2024/01/31 14:01:17 by cmanica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,17 @@ static int	loop(const char *format, int size, va_list args)
 		{
 			x = casos(format, args);
 			if (x == -1)
-				return (-1);
+				return (size);
 			size += x - 1;
 			format += 2;
 		}
 		else if (*format == '%' && *(format + 1) == '%')
-			format += sizechar('%', 1) + 1;
+		{
+			ft_putchar_fd('%', 1);
+			format += 2;
+		}
 		else
-			sizechar(*(format++), 1);
+			write(1, format++, 1);
 		size++;
 	}
 	return (size);
@@ -56,9 +59,11 @@ int	ft_printf(const char *format, ...)
 }
 /*
 int	main(void)
-{ 
-	printf("%%%");
-	ft_printf("%%%");
+{
+	printf("%d", printf("%s", "some string with %s hehe\n"));
+	printf("\n");
+	printf("%d", ft_printf("%s", "some string with %s hehe\n"));
+	printf("\n");
 	return (0);
 }
 */
