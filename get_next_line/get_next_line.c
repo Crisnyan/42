@@ -6,7 +6,7 @@
 /*   By: cristian <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 22:09:53 by cristian          #+#    #+#             */
-/*   Updated: 2024/01/01 23:21:43 by cristian         ###   ########.fr       */
+/*   Updated: 2024/01/29 21:22:33 by cristian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,12 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #define BUFFER_SIZE 5
+
+typedef struct	line
+{
+	char		*node;
+	part		*arrow;
+}part;
 
 void	getinres(int fd, char *res)
 {
