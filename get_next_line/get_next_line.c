@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cristian <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/01 16:18:00 by cristian          #+#    #+#             */
+/*   Updated: 2024/02/03 22:20:43 by cristian         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -7,16 +19,18 @@
 int	findnl(char *buff)
 {
 	int	i;
+	int	x;
 
-	i = 0;
-	while (i < BUFFER_SIZE)
+	i = 1;
+	x = (int)slen(buff);
+	while (i < x + 1)
 	{
 		if (*buff == '\n')
 			return (i);
 		buff++;
 		i++;
 	}
-	return (-1);
+	return (0);
 }
 
 part	create(char *buff, part *ptr)
@@ -27,22 +41,22 @@ part	create(char *buff, part *ptr)
 
 	ptr = &part;
 	check = findnl(buff);
-	if (check != -1)
+	if (check != 0 && check != BUFFER_SIZE)
 		str = ft_substr(buff, 0, check);
 	else
 		str = ft_strdup(buff);
+	str[slen(str)] = 0;
 	ptr->node = str;
 	ptr->arrow = 0;
 	return (part);
 }
-
 
 char	*getstr(part *head, char *buff)
 {
 	part	*ptr;
 	int	num;
 	char	*str;
-	
+
 	ptr = head;
 	num = 0;
 	while (ptr != 0) 
@@ -50,79 +64,100 @@ char	*getstr(part *head, char *buff)
 		ptr = ptr->arrow;
 		num++;
 	}
-	printf("%d\n", num);
-	printf("%d\n", (num - 1)* BUFFER_SIZE + findnl(buff) + 1);
 	ptr = head;
-	str = malloc((num - 1)* BUFFER_SIZE + findnl(buff) + 1);
+	if (findnl(head->node) != 0 && findnl(head->node) != BUFFER_SIZE)
+		str = clc((num - 2) * BUFFER_SIZE + slen(head->node) + slen(buff), 1);
+	else
+		str = clc((num - 1) * BUFFER_SIZE + slen(head->node), 1);
+	if (num == 1)
+		return(str = ft_strjoin(head->node, "\0"));
 	while (--num > -1)
 	{
 		str = ft_strjoin(str, ptr->node);
 		ptr = ptr->arrow;
 	}
-		str = ft_strjoin(str, "\0");
+	str = ft_strjoin(str, "\0");
 	return (str);
 }
-		
+
+char	*clearall(char *buff, part *head)
+{
+	int	check;
+	part	*ptr;
+
+	ptr = head;
+	check = findnl(buff);
+	if (check != BUFFER_SIZE)
+		buff = ft_substr(buff, check, BUFFER_SIZE - check + 1);
+	else
+		buff[0] = 0;
+	while (ptr != 0)
+	{
+		head = head->arrow;
+		head = 0;
+		free(ptr->node);
+		ptr = ptr->arrow;
+		head = ptr;
+	}
+	return (free(ptr), buff);
+}
+
 char	*get_next_line(int fd)
 {
 	part		*head;
 	part		*prev;
 	part		*next;
-	static char	*buff;
+	char		*buff;
+	static char	*res;
 	char		*str;
 
 	head = 0;
 	prev = 0;
-	if (buff)
+	next = 0;
+	buff = clc((BUFFER_SIZE + 1), 1);
+	if (res)
 	{
 		prev = (part *)malloc(sizeof(part));
-		*prev = create(buff, prev);
+		*prev = create(res, prev);
 		head = prev;
+		if (findnl(res) != 0)
+			buff = res;
 	}
-	buff = malloc(BUFFER_SIZE);
-	while (findnl(buff) == -1)
+	while (findnl(buff) == 0 && read(fd, buff, BUFFER_SIZE) > 0)
 	{
-		read(fd, buff, BUFFER_SIZE);
 		next = (part *)malloc(sizeof(part));
-		printf("BUFF IN 1: %s\n", buff);
+		*next = create(buff, next);
 		if (head == 0)
 			head = next;
-		*next = create(buff, next);
 		if (!next)
-			break ;
+			return (0);
 		if (prev)
-		{
 			prev->arrow = next;
-			printf("ARROW POINTING TO: %p", prev->arrow);
-		}
 		prev = next;
-		printf("BUFF IN 1: %s\n", buff);
 	}
+	if (findnl(buff) == 0)
+		return (0);
 	prev->arrow = next;
-	next->arrow = 0;
-	printf("ARROW POINTING TO: %p", prev->arrow);
-	printf("BUFF IN 1: %s\n", buff);
+	if (next != 0)
+		next->arrow = 0;
 	str = getstr(head, buff);
-	printf("BUFF IN 2: %s\n", buff);
-	buff = ft_substr(buff, findnl(buff), BUFFER_SIZE - findnl(buff));
-	printf("BUFF IN 3: %s\n", buff);
-	head = 0;
-	return (str);
+	res = clearall(buff, head);
+	if (*res == 0)
+		res = 0;
+	return (free(buff), str);
 }
-
+/*
 int main(void)
 {
 	int	libro;
-	int	times;
 	int	i;
+	int	lines;
 
 	i = 0;
-	times = 5;
-	while (i < times)
-	{
-		libro = open("bee.txt", O_RDONLY);
+	lines = 4070;
+	libro = open("bee.txt", O_RDONLY);
+	while(i++ < lines) 
 		printf("%s", get_next_line(libro));
-		i++;
-	}
+		
 }
-
+*/
