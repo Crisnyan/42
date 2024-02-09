@@ -6,7 +6,7 @@
 /*   By: cristian <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 16:18:00 by cristian          #+#    #+#             */
-/*   Updated: 2024/02/03 22:20:43 by cristian         ###   ########.fr       */
+/*   Updated: 2024/02/09 02:19:51 by cristian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,13 @@
 #include <fcntl.h>
 #include "get_next_line.h"
 
-int	findnl(char *buff)
+int	fnl(char *buff)
 {
 	int	i;
 	int	x;
 
+	if (buff == 0)
+		return (0);
 	i = 1;
 	x = (int)slen(buff);
 	while (i < x + 1)
@@ -33,131 +35,126 @@ int	findnl(char *buff)
 	return (0);
 }
 
-part	create(char *buff, part *ptr)
+void	create(char *buff, t_part **parts, char **res)
 {
-	part	part;
-	int	check;
-	char	*str;
+	int		check;
 
-	ptr = &part;
-	check = findnl(buff);
+	if (*res)
+		buff = *res;
+	parts[NEXT] = clc(sizeof(t_part), 1);
+	check = fnl(buff);
 	if (check != 0 && check != BUFFER_SIZE)
-		str = ft_substr(buff, 0, check);
+		parts[NEXT]->node = ft_substr(buff, 0, check);
 	else
-		str = ft_strdup(buff);
-	str[slen(str)] = 0;
-	ptr->node = str;
-	ptr->arrow = 0;
-	return (part);
+		parts[NEXT]->node = ft_strdup(buff);
+	parts[NEXT]->arrow = 0;
+	if (parts[HEAD] == 0)
+		parts[HEAD] = parts[NEXT];
+	if (!parts[NEXT])
+		return (clearall(buff, parts, res, 1));
+	if (parts[PREV] && parts[NEXT])
+		parts[PREV]->arrow = parts[NEXT];
+	parts[PREV] = parts[NEXT];
+	if (check != 0 && check != BUFFER_SIZE)
+		*res = ft_substr(buff, check, BUFFER_SIZE - check);
+	else
+		*res = 0;
 }
 
-char	*getstr(part *head, char *buff)
+char	*getstr(t_part **p, char *b)
 {
-	part	*ptr;
-	int	num;
+	t_part	*ptr;
+	int		num;
 	char	*str;
 
-	ptr = head;
+	ptr = p[HEAD];
 	num = 0;
 	while (ptr != 0) 
 	{
 		ptr = ptr->arrow;
 		num++;
 	}
-	ptr = head;
-	if (findnl(head->node) != 0 && findnl(head->node) != BUFFER_SIZE)
-		str = clc((num - 2) * BUFFER_SIZE + slen(head->node) + slen(buff), 1);
+	ptr = p[HEAD];
+	if (fnl(p[HEAD]->node) != 0 && fnl(p[HEAD]->node) != BUFFER_SIZE)
+		str = clc((num - 2) * BUFFER_SIZE + slen(p[HEAD]->node) + slen(b), 1);
 	else
-		str = clc((num - 1) * BUFFER_SIZE + slen(head->node), 1);
+		str = clc((num - 1) * BUFFER_SIZE + slen(p[HEAD]->node), 1);
 	if (num == 1)
-		return(str = ft_strjoin(head->node, "\0"));
+		return (ft_strdup((p[HEAD]->node)));
 	while (--num > -1)
 	{
 		str = ft_strjoin(str, ptr->node);
 		ptr = ptr->arrow;
 	}
-	str = ft_strjoin(str, "\0");
 	return (str);
 }
 
-char	*clearall(char *buff, part *head)
+void	clearall(char *buff, t_part **parts, char **res, int mode)
 {
-	int	check;
-	part	*ptr;
+	int		check;
+	t_part	*ptr;
 
-	ptr = head;
-	check = findnl(buff);
-	if (check != BUFFER_SIZE)
-		buff = ft_substr(buff, check, BUFFER_SIZE - check + 1);
-	else
-		buff[0] = 0;
+	ptr = parts[HEAD];
+	check = fnl(buff);
+	if (check != BUFFER_SIZE && check != 0 && mode == 1)
+		*res = ft_substr(buff, check, BUFFER_SIZE - check + 1);
+	else if (fnl(*res) != 0 && mode == 1)
+		*res = ft_substr(*res, check, BUFFER_SIZE - check + 1);
+	else if (mode == 1)
+		*res = 0;
 	while (ptr != 0)
 	{
-		head = head->arrow;
-		head = 0;
+		parts[HEAD] = parts[HEAD]->arrow;
+		parts[HEAD] = 0;
 		free(ptr->node);
 		ptr = ptr->arrow;
-		head = ptr;
+		parts[HEAD] = ptr;
 	}
-	return (free(ptr), buff);
+	buff = 0;
+	return (free(ptr), free(buff));
 }
 
 char	*get_next_line(int fd)
 {
-	part		*head;
-	part		*prev;
-	part		*next;
-	char		*buff;
-	static char	*res;
-	char		*str;
+	t_part		*parts[3];
+	char		*str[2];
+	static char	*res = 0;
 
-	head = 0;
-	prev = 0;
-	next = 0;
-	buff = clc((BUFFER_SIZE + 1), 1);
-	if (res)
+	parts[HEAD] = 0;
+	parts[NEXT] = 0;
+	str[S] = 0;
+	str[B] = clc((BUFFER_SIZE + 1), 1);
+	while (res && !str[S])
 	{
-		prev = (part *)malloc(sizeof(part));
-		*prev = create(res, prev);
-		head = prev;
-		if (findnl(res) != 0)
-			buff = res;
+		if (create(res, parts, &res), 1 && fnl(parts[PREV]->node) != 0)
+		{
+			str[S] = getstr(parts, res);
+			return (clearall(str[B], parts, &res, 2), str[S]);
+		}
 	}
-	while (findnl(buff) == 0 && read(fd, buff, BUFFER_SIZE) > 0)
-	{
-		next = (part *)malloc(sizeof(part));
-		*next = create(buff, next);
-		if (head == 0)
-			head = next;
-		if (!next)
-			return (0);
-		if (prev)
-			prev->arrow = next;
-		prev = next;
-	}
-	if (findnl(buff) == 0)
-		return (0);
-	prev->arrow = next;
-	if (next != 0)
-		next->arrow = 0;
-	str = getstr(head, buff);
-	res = clearall(buff, head);
-	if (*res == 0)
-		res = 0;
-	return (free(buff), str);
+	while (fnl(str[B]) == 0 && read(fd, str[B], BUFFER_SIZE) > 0 && fd != -1)
+		create(str[B], parts, &res);
+	if (fnl(str[B]) == 0 && !res && parts[NEXT] == 0)
+		return (clearall(str[B], parts, &res, 1), free(res), NULL);
+	parts[PREV]->arrow = parts[NEXT];
+	if (parts[NEXT] != 0)
+		parts[NEXT]->arrow = 0;
+	str[S] = getstr(parts, str[B]);
+	return (clearall(str[B], parts, &res, 1), str[S]);
 }
 /*
 int main(void)
 {
 	int	libro;
-	int	i;
-	int	lines;
+	char	*str;
 
-	i = 0;
-	lines = 4070;
-	libro = open("bee.txt", O_RDONLY);
-	while(i++ < lines) 
-		printf("%s", get_next_line(libro));
-		
+	libro = open("giant_line_nl.txt", O_RDONLY);
+	str = get_next_line(libro);
+	while(str)
+	{
+		printf("%s", str);
+		free(str);
+		str = get_next_line(libro);
+	}
 }
 */
