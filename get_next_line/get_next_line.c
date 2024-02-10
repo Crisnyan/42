@@ -6,7 +6,7 @@
 /*   By: cristian <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 16:18:00 by cristian          #+#    #+#             */
-/*   Updated: 2024/02/09 02:19:51 by cristian         ###   ########.fr       */
+/*   Updated: 2024/02/10 02:41:45 by cristian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,19 +18,18 @@
 
 int	fnl(char *buff)
 {
-	int	i;
-	int	x;
+	int		i;
+	int		x;
 
 	if (buff == 0)
 		return (0);
 	i = 1;
-	x = (int)slen(buff);
-	while (i < x + 1)
+	x = (int)slen(buff) + 1;
+	while (i++ < x + 1)
 	{
 		if (*buff == '\n')
 			return (i);
 		buff++;
-		i++;
 	}
 	return (0);
 }
@@ -61,32 +60,27 @@ void	create(char *buff, t_part **parts, char **res)
 		*res = 0;
 }
 
-char	*getstr(t_part **p, char *b)
+void	getstr(t_part **p, char **b)
 {
 	t_part	*ptr;
-	int		num;
-	char	*str;
+	int		n;
 
 	ptr = p[HEAD];
-	num = 0;
-	while (ptr != 0) 
-	{
+	n = 0;
+	while (ptr != 0 && n++ > -1) 
 		ptr = ptr->arrow;
-		num++;
-	}
 	ptr = p[HEAD];
 	if (fnl(p[HEAD]->node) != 0 && fnl(p[HEAD]->node) != BUFFER_SIZE)
-		str = clc((num - 2) * BUFFER_SIZE + slen(p[HEAD]->node) + slen(b), 1);
+		b[S] = clc((n - 2) * BUFFER_SIZE + slen(p[HEAD]->node) + slen(b[B]), 1);
 	else
-		str = clc((num - 1) * BUFFER_SIZE + slen(p[HEAD]->node), 1);
-	if (num == 1)
-		return (ft_strdup((p[HEAD]->node)));
-	while (--num > -1)
+		b[S] = clc((n - 1) * BUFFER_SIZE + slen(p[HEAD]->node), 1);
+	if (n == 1)
+		b[S] = ft_strdup(p[HEAD]->node);
+	while (--n > -1)
 	{
-		str = ft_strjoin(str, ptr->node);
+		b[S] = ft_strjoin(b[S], ptr->node);
 		ptr = ptr->arrow;
 	}
-	return (str);
 }
 
 void	clearall(char *buff, t_part **parts, char **res, int mode)
@@ -111,50 +105,44 @@ void	clearall(char *buff, t_part **parts, char **res, int mode)
 		parts[HEAD] = ptr;
 	}
 	buff = 0;
-	return (free(ptr), free(buff));
+	return (free(parts[HEAD]), free(parts[PREV]), free(ptr), free(buff));
 }
 
 char	*get_next_line(int fd)
 {
 	t_part		*parts[3];
-	char		*str[2];
+	char		*s[2];
 	static char	*res = 0;
 
 	parts[HEAD] = 0;
 	parts[NEXT] = 0;
-	str[S] = 0;
-	str[B] = clc((BUFFER_SIZE + 1), 1);
-	while (res && !str[S])
-	{
+	s[S] = 0;
+	s[B] = clc((BUFFER_SIZE + 1), 1);
+	while (res && !s[S])
 		if (create(res, parts, &res), 1 && fnl(parts[PREV]->node) != 0)
-		{
-			str[S] = getstr(parts, res);
-			return (clearall(str[B], parts, &res, 2), str[S]);
-		}
-	}
-	while (fnl(str[B]) == 0 && read(fd, str[B], BUFFER_SIZE) > 0 && fd != -1)
-		create(str[B], parts, &res);
-	if (fnl(str[B]) == 0 && !res && parts[NEXT] == 0)
-		return (clearall(str[B], parts, &res, 1), free(res), NULL);
+			return (getstr(parts, s), clearall(s[B], parts, &res, 2), s[S]);
+	while (fnl(s[B]) == 0 && read(fd, s[B], BUFFER_SIZE) > 0 && fd != -1)
+		create(s[B], parts, &res);
+	if (fnl(s[B]) == 0 && !res && !parts[HEAD])
+		return (clearall(s[B], parts, &res, 1), free(res), NULL);
 	parts[PREV]->arrow = parts[NEXT];
 	if (parts[NEXT] != 0)
 		parts[NEXT]->arrow = 0;
-	str[S] = getstr(parts, str[B]);
-	return (clearall(str[B], parts, &res, 1), str[S]);
+	return (getstr(parts, s), clearall(s[B], parts, &res, 1), s[S]);
 }
-/*
+
 int main(void)
 {
 	int	libro;
-	char	*str;
+	char	*s;
 
-	libro = open("giant_line_nl.txt", O_RDONLY);
-	str = get_next_line(libro);
-	while(str)
+	libro = open("test.txt", O_RDONLY);
+	s = get_next_line(libro);
+	while(s)
 	{
-		printf("%s", str);
-		free(str);
-		str = get_next_line(libro);
+		printf("%s", s);
+		free(s);
+		s = get_next_line(libro);
 	}
 }
-*/
+

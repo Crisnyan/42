@@ -6,7 +6,7 @@
 /*   By: cristian <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 16:16:52 by cristian          #+#    #+#             */
-/*   Updated: 2024/02/09 02:29:20 by cristian         ###   ########.fr       */
+/*   Updated: 2024/02/09 12:56:25 by cristian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,6 @@ void	*clc(size_t count, size_t size)
 	i = 0;
 	ptr = malloc(count * size);
 	str = (char *)ptr;
-	if (count == 0 || size == 0)
-		count = 1;
 	if (ptr != NULL && size > 0 && count > 0)
 	{
 		while (i++ < size * count)
@@ -71,14 +69,24 @@ char	*ft_strjoin(char *s1, char *s2)
 
 	str = clc(slen(s1) + slen(s2) + 1, 1);
 	if (!str)
-		return (free(s1), free(s2), NULL);
+	{
+		if (s1)
+			free(s1);
+		if (s2)
+			free(s2);
+		return (NULL);
+	}
 	i = 0;
 	while (*s1 != '\0')
 		str[i++] = *(s1++);
 	while (*s2)
 		str[i++] = *(s2++);
+	if (s1)
+		free(s1);
+	if (s2)
+		free(s2);
 	str[i] = '\0';
-	return (free(s1), free(s2), str);
+	return (str);
 }
 
 char	*ft_substr(char *s, unsigned int start, size_t len)
