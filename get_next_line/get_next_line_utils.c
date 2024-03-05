@@ -6,19 +6,21 @@
 /*   By: cristian <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 16:16:52 by cristian          #+#    #+#             */
-/*   Updated: 2024/02/09 12:56:25 by cristian         ###   ########.fr       */
+/*   Updated: 2024/02/11 15:03:04 by cmanica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <unistd.h>
-#include "get_next_line.h"
+#include "new.h"
 
 size_t	slen(const char *s)
 {
 	int	i;
 
 	i = 0;
+	if (!s)
+		return (0);
 	while (*s != '\0')
 	{
 		i++;
@@ -69,22 +71,13 @@ char	*ft_strjoin(char *s1, char *s2)
 
 	str = clc(slen(s1) + slen(s2) + 1, 1);
 	if (!str)
-	{
-		if (s1)
-			free(s1);
-		if (s2)
-			free(s2);
 		return (NULL);
-	}
 	i = 0;
-	while (*s1 != '\0')
-		str[i++] = *(s1++);
+	if (s1)
+		while (*s1 != '\0')
+			str[i++] = *(s1++);
 	while (*s2)
 		str[i++] = *(s2++);
-	if (s1)
-		free(s1);
-	if (s2)
-		free(s2);
 	str[i] = '\0';
 	return (str);
 }

@@ -6,7 +6,7 @@
 /*   By: cristian <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 16:18:00 by cristian          #+#    #+#             */
-/*   Updated: 2024/02/10 02:41:45 by cristian         ###   ########.fr       */
+/*   Updated: 2024/02/11 14:01:19 by cmanica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,10 +60,11 @@ void	create(char *buff, t_part **parts, char **res)
 		*res = 0;
 }
 
-void	getstr(t_part **p, char **b)
+char *getstr(t_part **p, char *b)
 {
 	t_part	*ptr;
 	int		n;
+	char	*str;
 
 	ptr = p[HEAD];
 	n = 0;
@@ -71,16 +72,17 @@ void	getstr(t_part **p, char **b)
 		ptr = ptr->arrow;
 	ptr = p[HEAD];
 	if (fnl(p[HEAD]->node) != 0 && fnl(p[HEAD]->node) != BUFFER_SIZE)
-		b[S] = clc((n - 2) * BUFFER_SIZE + slen(p[HEAD]->node) + slen(b[B]), 1);
+		str = clc((n - 2) * BUFFER_SIZE + slen(p[HEAD]->node) + slen(b), 1);
 	else
-		b[S] = clc((n - 1) * BUFFER_SIZE + slen(p[HEAD]->node), 1);
+		str = clc((n - 1) * BUFFER_SIZE + slen(p[HEAD]->node), 1);
 	if (n == 1)
-		b[S] = ft_strdup(p[HEAD]->node);
+		return (str = ft_strdup(p[HEAD]->node));
 	while (--n > -1)
 	{
-		b[S] = ft_strjoin(b[S], ptr->node);
+		str = ft_strjoin(str, ptr->node);
 		ptr = ptr->arrow;
 	}
+		return (str);
 }
 
 void	clearall(char *buff, t_part **parts, char **res, int mode)
@@ -119,8 +121,13 @@ char	*get_next_line(int fd)
 	s[S] = 0;
 	s[B] = clc((BUFFER_SIZE + 1), 1);
 	while (res && !s[S])
+	{
 		if (create(res, parts, &res), 1 && fnl(parts[PREV]->node) != 0)
-			return (getstr(parts, s), clearall(s[B], parts, &res, 2), s[S]);
+		{
+			s[B] = getstr(parts, s[B]);
+			return (clearall(s[B], parts, &res, 2), s[S]);
+		}
+	}
 	while (fnl(s[B]) == 0 && read(fd, s[B], BUFFER_SIZE) > 0 && fd != -1)
 		create(s[B], parts, &res);
 	if (fnl(s[B]) == 0 && !res && !parts[HEAD])
@@ -128,7 +135,8 @@ char	*get_next_line(int fd)
 	parts[PREV]->arrow = parts[NEXT];
 	if (parts[NEXT] != 0)
 		parts[NEXT]->arrow = 0;
-	return (getstr(parts, s), clearall(s[B], parts, &res, 1), s[S]);
+	s[B] = getstr(parts, s[B]);
+	return (clearall(s[B], parts, &res, 1), s[S]);
 }
 
 int main(void)
@@ -144,5 +152,7 @@ int main(void)
 		free(s);
 		s = get_next_line(libro);
 	}
+	close(libro);
+	return (0);
 }
 
