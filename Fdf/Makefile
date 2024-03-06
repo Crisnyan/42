@@ -1,4 +1,4 @@
-SRCS		=	prueba.c
+SRCS		=	utils.c fdf.c
 HEADERS		= 	fdf.h 
 NAME		=	fdf
 CC			=	clang -Wall -Wextra -Werror -g

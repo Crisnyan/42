@@ -6,7 +6,7 @@
 /*   By: cmanica- <cmanica-@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 16:13:25 by cmanica-          #+#    #+#             */
-/*   Updated: 2024/03/01 18:37:51 by cmanica-         ###   ########.fr       */
+/*   Updated: 2024/03/06 17:50:44 by cmanica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,14 +51,23 @@ typedef struct s_data
 	int		endian;
 }	t_data;
 
-typedef struct pos
+typedef struct s_vec3
 {
 	int		x;
 	int		y;
-	float	z;
-}	t_pos;
+	int		z;
+}	t_vec3;
 
-float **parser(int fd, int lines, int rows);
+typedef struct s_mat
+{
+	t_vec3	row1;
+	t_vec3	row2;
+	t_vec3	row3;
+}	t_mat;
+
 int	get_lines(char	*file_name);
-t_pos	**points(float **mat, int lines, int rows, t_data img);
 int	get_rows(char	*file_name);
+float **parser(int fd, int lines, int rows);
+void	strmat_free(char ***strmat);
+t_mat	*mat_create(int x, int y, int z);
+t_mat	**points(float **z_pos, int lines, int rows);
