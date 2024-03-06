@@ -6,7 +6,7 @@
 /*   By: cmanica- <cmanica-@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 16:13:25 by cmanica-          #+#    #+#             */
-/*   Updated: 2024/03/06 17:50:44 by cmanica-         ###   ########.fr       */
+/*   Updated: 2024/03/06 18:47:34 by cmanica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,9 @@ typedef struct s_vec3
 
 typedef struct s_mat
 {
-	t_vec3	row1;
-	t_vec3	row2;
-	t_vec3	row3;
+	t_vec3	c1;
+	t_vec3	c2;
+	t_vec3	c3;
 }	t_mat;
 
 int	get_lines(char	*file_name);
