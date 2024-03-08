@@ -6,30 +6,38 @@
 /*   By: cmanica- <cmanica-@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 16:51:40 by cmanica-          #+#    #+#             */
-/*   Updated: 2024/03/06 19:18:55 by cmanica-         ###   ########.fr       */
+/*   Updated: 2024/03/08 19:53:53 by cmanica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-t_mat	*mat_create(int x, int y, int z)
+t_vec3	cvec(float x, float y, float z)
 {
-	t_mat	*mat;
+	t_vec3 vec;
 
-	mat = malloc(sizeof(t_mat));
-	if (!mat)
-		return (NULL);
-	mat->row1.x = x;
-	mat->row1.y = 0;
-	mat->row1.z = 0;
-	mat->row2.x = 0;
-	mat->row2.y = y;
-	mat->row2.z = 0;
-	mat->row3.x = 0;
-	mat->row3.y = 0;
-	mat->row3.z = z;
+	vec.x = x;
+	vec.y = y;
+	vec.z = z;
+	return (vec);
+}
+	
+t_mat	cmat(t_vec3 vec1, t_vec3 vec2, t_vec3 vec3)
+{
+	t_mat	mat;
+
+	mat.c1.x = vec1.x;
+	mat.c1.y = vec1.y;
+	mat.c1.z = vec1.z;
+	mat.c2.x = vec2.x;
+	mat.c2.y = vec2.y;
+	mat.c2.z = vec2.z;
+	mat.c3.x = vec3.x;
+	mat.c3.y = vec3.y;
+	mat.c3.z = vec3.z;
 	return (mat);
 }
+
 int	get_lines(char	*file_name)
 {
 	int		lines;
@@ -67,16 +75,16 @@ int	get_rows(char	*file_name)
 	return (rows);
 }
 
-float **parser(int fd, int lines, int rows)
+int	**parser(int fd, int lines, int rows)
 {
 	char	***strmat;
 	int		i;
 	int		j;
-	float	**z_pos;
+	int	**posz;
 
 	i = -1;
 	strmat = malloc(sizeof(char**) * (lines + 1));
-	z_pos = malloc(sizeof(float *) * (lines));
+	posz = malloc(sizeof(int *) * (lines));
 	while (++i < lines)
 		strmat[i] = ft_split(get_next_line(fd), ' ');
 	strmat[i + 1] = NULL;
@@ -84,10 +92,33 @@ float **parser(int fd, int lines, int rows)
 	while (++i < lines)
 	{
 		j = -1;
-		z_pos[i] = malloc(sizeof(float) * rows);
+		posz[i] = malloc(sizeof(int) * rows);
 		while (++j < rows)
-			z_pos[i][j] = (float)ft_atoi(strmat[i][j]);
-	}
+			posz[i][j] = ft_atoi(strmat[i][j]); }
 	close(fd);
-	return (z_pos);
+	return (posz);
 }
+
+void	printmat(t_mat mat)
+{
+	printf(" X1: %.2f", mat.c1.x);
+	printf(" Y1: %.2f", mat.c1.y);
+	printf(" Z1: %.2f\n", mat.c1.z);
+	printf(" X2: %.2f", mat.c2.x);
+	printf(" Y2: %.2f", mat.c2.y);
+	printf(" Z2: %.2f\n", mat.c2.z);
+	printf(" X3: %.2f", mat.c3.x);
+	printf(" Y3: %.2f", mat.c3.y);
+	printf(" Z3: %.2f\n", mat.c3.z);
+	printf("\n");
+}
+//
+//void	center_mat(t_mat *mat, int lines, int rows)
+//{
+//	lines = 0;
+//	rows = 0;
+//
+//	mat->c1.x = mat->c1.x -  lines / 2;
+//	mat->c2.y = mat->c1.y - rows / 2;
+//	mat->c3.z = mat->c3.z;
+//}

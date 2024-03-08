@@ -1,0 +1,40 @@
+ROWS: 2
+LINES: 2
+PUNTO 0, 0
+ X1: 0 Y1: 0 Z1: 0
+ X2: 0 Y2: 0 Z2: 0
+ X3: 0 Y3: 0 Z3: 4
+PUNTO 0, 1
+ X1: 1 Y1: 0 Z1: 0
+ X2: 0 Y2: 0 Z2: 0
+ X3: 0 Y3: 0 Z3: 3
+
+PUNTO 1, 0
+ X1: 0 Y1: 0 Z1: 0
+ X2: 0 Y2: 1 Z2: 0
+ X3: 0 Y3: 0 Z3: 2
+PUNTO 1, 1
+ X1: 1 Y1: 0 Z1: 0
+ X2: 0 Y2: 1 Z2: 0
+ X3: 0 Y3: 0 Z3: 1
+
+REPLICA
+ X1: 0 Y1: 0 Z1: 0
+ X2: 0 Y2: 0 Z2: 0
+ X3: 0 Y3: 0 Z3: 4
+
+REPLICA
+ X1: 0 Y1: 0 Z1: 0
+ X2: 1 Y2: 0 Z2: 0
+ X3: 0 Y3: 0 Z3: 0
+
+REPLICA
+ X1: 0 Y1: 0 Z1: 3
+ X2: 0 Y2: 0 Z2: 0
+ X3: 0 Y3: 0 Z3: 0
+
+REPLICA
+ X1: 0 Y1: 1 Z1: 0
+ X2: 0 Y2: 0 Z2: 2
+ X3: 0 Y3: 0 Z3: 0
+

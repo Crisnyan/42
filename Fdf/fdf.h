@@ -6,12 +6,13 @@
 /*   By: cmanica- <cmanica-@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 16:13:25 by cmanica-          #+#    #+#             */
-/*   Updated: 2024/03/06 18:47:34 by cmanica-         ###   ########.fr       */
+/*   Updated: 2024/03/08 19:08:07 by cmanica-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mlx/mlx.h"
 #include "libft/libft.h"
+#include <math.h>
 
 # define LINES 0
 # define ROWS 1
@@ -34,6 +35,7 @@
 # define MOUSE_WHEEL_UP 4
 # define MOUSE_WHEEL_DOWN 5
 # define ESCAPE 53
+# define ANGLE M_PI_4
 
 typedef struct win
 {
@@ -53,9 +55,9 @@ typedef struct s_data
 
 typedef struct s_vec3
 {
-	int		x;
-	int		y;
-	int		z;
+	float		x;
+	float		y;
+	float		z;
 }	t_vec3;
 
 typedef struct s_mat
@@ -67,7 +69,10 @@ typedef struct s_mat
 
 int	get_lines(char	*file_name);
 int	get_rows(char	*file_name);
-float **parser(int fd, int lines, int rows);
+int **parser(int fd, int lines, int rows);
 void	strmat_free(char ***strmat);
-t_mat	*mat_create(int x, int y, int z);
-t_mat	**points(float **z_pos, int lines, int rows);
+t_vec3	cvec(float x, float y, float z);
+t_mat	cmat(t_vec3 vec1, t_vec3 vec2, t_vec3 vec3);
+t_mat	*points(int **posz, int lines, int rows);
+void	printmat(t_mat mat);
+void	center_mat(t_mat *mat, int lines, int rows);
