@@ -6,7 +6,7 @@
 /*   By: cristian <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:37:40 by cristian          #+#    #+#             */
-/*   Updated: 2024/07/10 05:28:42 by cristian         ###   ########.fr       */
+/*   Updated: 2024/07/11 04:37:17 by cristian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 #include <unistd.h>
 #include "libft/ft_atoi.c"
 #include "libft/ft_isdigit.c"
+#include "libft/ft_bzero.c"
+#include "libft/ft_calloc.c"
 #include "libft/ft_strlen.c"
 
 #ifndef PTR
@@ -48,7 +50,6 @@
 typedef	struct s_node
 {
 	int		data;
-	int		pos;
 	struct s_node	*prev;	
 	struct s_node	*next;	
 } t_node;
@@ -60,7 +61,7 @@ int	ft_sign(int c)
 		return (1);
 	return (0);
 }
-		
+
 int	check_arg(char *argv)
 {
 	int	i;
@@ -72,7 +73,8 @@ int	check_arg(char *argv)
 		{
 			if (!ft_sign(argv[i]))
 				return (0);
-			if (ft_sign(argv[i]) && !ft_isdigit(argv[i + 1]))
+			if ((argv[i] == '-' || argv[i] == '+') 
+				&& !ft_isdigit(argv[i + 1]))
 				return (0);
 		}
 		else
@@ -85,7 +87,7 @@ int	check_arg(char *argv)
 	return (1);
 }
 
-t_node	*create_node(int data, int pos)
+t_node	*create_node(int data)
 {
 	t_node	*ptr;
 	
@@ -93,13 +95,12 @@ t_node	*create_node(int data, int pos)
 	if (ptr == NULL)
 		return (NULL);
 	ptr->data = data;
-	ptr->pos = pos;
 	ptr->prev = NULL;
 	ptr->next = NULL;
 	return (ptr);
 }
 
-t_node	*create_unique(int data, int pos)
+t_node	*create_unique(int data)
 {
 	t_node	*ptr;
 	
@@ -107,7 +108,6 @@ t_node	*create_unique(int data, int pos)
 	if (ptr == NULL)
 		return (NULL);
 	ptr->data = data;
-	ptr->pos = pos;
 	ptr->prev = ptr;
 	ptr->next = ptr;
 	return (ptr);
@@ -191,7 +191,7 @@ t_node	*init_stack(int num, char **argv)
 	{
 		if (check_arg(argv[++i]) == 0)
 			return (free_node_interrupt(node[HEAD]), NULL); 
-		node[PTR] = create_node(ft_atoi(argv[i]), i);
+		node[PTR] = create_node(ft_atoi(argv[i]));
 		if (node[PTR] == NULL)
 			return (free_node_interrupt(node[HEAD]), NULL); 
 		if (node[PREV])
@@ -209,39 +209,46 @@ t_node	*init_stack(int num, char **argv)
 	return (node[PTR]);
 }
 
+void	print_stack(t_node **stack)
+{
+	t_node	*head;
+	t_node	*ptr;
+
+	head = *stack;
+	printf("%d\n", head->data);
+	ptr = head->next;
+	while (ptr != head)
+	{
+		printf("%d\n", ptr->data);
+		ptr = ptr->next;
+	}
+}
+
 void	sa(t_node *head_a)
 {
 	t_node	*next;
-	int	temp_pos;
 	int	temp_data;
 
 	if (head_a->next == head_a)
 		return ;
 	next = head_a->next;
 	temp_data = head_a->data;
-	temp_pos = head_a->pos;
 	head_a->data = next->data;
-	head_a->pos = next->pos;
 	next->data = temp_data;
-	next->pos = temp_pos;
 	printf("sa\n");
 }
 
 void	sb(t_node *head_b)
 {
 	t_node	*next;
-	int	temp_pos;
 	int	temp_data;
 
 	if (head_b->next == head_b)
 		return ;
 	next = head_b->next;
 	temp_data = head_b->data;
-	temp_pos = head_b->pos;
 	head_b->data = next->data;
-	head_b->pos = next->pos;
 	next->data = temp_data;
-	next->pos = temp_pos;
 	printf("sb\n");
 }
 
@@ -271,12 +278,12 @@ void	pa(t_node **head_a, t_node **head_b, int nums[2])
 		return ;
 	}
 	if (*head_b == NULL)
-		*head_b = create_unique((*head_a)->data, (*head_a)->pos);
+		*head_b = create_unique((*head_a)->data);
 	else
 	{
 		prev = (*head_b)->prev;
 		next = (*head_b);
-		(*head_b)->prev = create_node((*head_a)->data, (*head_a)->pos);
+		(*head_b)->prev = create_node((*head_a)->data);
 		*head_b = (*head_b)->prev;
 		(*head_b)->prev = prev;
 		(*head_b)->next = next;
@@ -297,12 +304,12 @@ void	pb(t_node **head_a, t_node **head_b, int nums[2])
 	if (nums[STK_B] < 1)
 		return ;
 	if (*head_a == NULL)
-		*head_a = create_unique((*head_b)->data, (*head_b)->pos);
+		*head_a = create_unique((*head_b)->data);
 	else
 	{
 		prev = (*head_a)->prev;
 		next = (*head_a);
-		(*head_a)->prev = create_node((*head_b)->data, (*head_b)->pos);
+		(*head_a)->prev = create_node((*head_b)->data);
 		*head_a = (*head_a)->prev;
 		(*head_a)->prev = prev;
 		(*head_a)->next = next;
@@ -364,18 +371,54 @@ void	push_two(t_node **head_a, t_node **head_b, int num_nodes[2])
 		temp = num_nodes[STK_A];
 		while (temp-- > 0)
 		{
-			printf("A: %d: %d\n", (*head_a)->pos, (*head_a)->data);
+			printf("A: %d\n", (*head_a)->data);
 			(*head_a) = (*head_a)->next;
 		}
 		temp = num_nodes[STK_B];
 		while (temp-- > 0)
 		{
-			printf("B: %d: %d\n", (*head_b)->pos, (*head_b)->data);
+			printf("B: %d\n", (*head_b)->data);
 			(*head_b) = (*head_b)->next;
 		}
 	}
 	printf("head A: %d\n", (*head_a)->data);
 	printf("head B: %d\n", (*head_b)->data);
+}
+
+int	is_min(int num, t_node *stack)
+{
+	t_node	*head;
+
+	head = stack;
+	if (stack->data < num)
+		return (0);
+	stack  = stack->next;
+	while (stack != head)
+	{
+		if (stack->data < num)
+			return (0);
+		stack = stack->next;
+	}
+	return (1);
+	
+}
+
+int	is_max(int num, t_node *stack)
+{
+	t_node	*head;
+
+	head = stack;
+	if (stack->data > num)
+		return (0);
+	stack  = stack->next;
+	while (stack != head)
+	{
+		if (stack->data > num)
+			return (0);
+		stack = stack->next;
+	}
+	return (1);
+	
 }
 
 t_node	*get_min(t_node *stack)
@@ -395,28 +438,41 @@ t_node	*get_min(t_node *stack)
 	return (min_node);
 }
 
+t_node	*get_max(t_node *stack)
+{
+	t_node	*head;
+	t_node	*max_node;
+
+	head = stack;
+	max_node = stack;
+	stack  = stack->next;
+	while (stack != head)
+	{
+		if (stack->data > max_node->data)
+			max_node = stack;
+		stack = stack->next;
+	}
+	return (max_node);
+}
+
 int	ordered(t_node *stack, t_node *min_node)
 {
 	t_node	*ptr;
-	int	disc;
 	
-	disc = 0;
 	ptr = min_node->next;
 	while (ptr != min_node)
 	{
 		if (ptr->data < ptr->prev->data)
-			disc++;
+			return (0);
 		ptr = ptr->next;
 	}
-	if (disc > 0)
-		return (-disc);
 	if (min_node == stack)
 		return (2);
 	else
 		return (1);
 }
 
-int	choose_rotation(t_node **stk_a, t_node *min_node)
+int	choose_rotation(t_node **stk_a, t_node *node)
 {
 	t_node	*ptr;
 	int	dir;
@@ -425,13 +481,17 @@ int	choose_rotation(t_node **stk_a, t_node *min_node)
 	dir = 0;
 	rev = 0;
 	ptr = *stk_a;
-	while (ptr->data != min_node->data)
+	printf("stack data: %d\n", ptr->data);
+	printf("node data: %d\n", node->data);
+	if (node->data == ptr->data)
+		printf("DA LO MISMO ME CAGO EN DIOS\n");
+	while (ptr->data != node->data)
 	{
 		ptr = ptr->next;
 		dir++;
 	}
 	ptr = *stk_a;
-	while (ptr->data != min_node->data)
+	while (ptr->data != node->data)
 	{
 		ptr = ptr->prev;
 		rev++;
@@ -446,6 +506,44 @@ void	mult_rots(void (*sort)(t_node **stack), t_node **stk_a, int times)
 {
 	while (times-- > 0)
 		sort(stk_a);
+}
+
+void	trot(void (*s)(t_node **a, t_node **b), t_node **x, t_node **y, int *t)
+{
+	if (t[STK_A] < 0 && t[STK_B] < 0)
+	{
+		while (t[STK_B]++ > 0 && t[STK_A]++ > 0)
+			s(x, y);
+	}
+	if (t[STK_A] > 0 && t[STK_B] > 0)
+	{
+		while (t[STK_B]-- > 0 && t[STK_A]-- > 0)
+			s(x, y);
+	}
+}
+
+int	initially_ordered(t_node **stk_a)
+{
+	t_node	*ptr;
+	t_node	*min_node;
+	int	order;
+	int	rot;
+
+	ptr = *stk_a;
+	min_node = get_min(ptr);
+	order = ordered(ptr, min_node);
+	if (order == ORDPOS)
+		return (order);
+	if (order == ORD)
+	{
+		rot = choose_rotation(stk_a, min_node);
+		if (rot > 0)
+			mult_rots(ra, stk_a, rot);
+		else if (rot < 0)
+			mult_rots(rra, stk_a, -rot);
+		return (order);
+	}
+	return (order);
 }
 
 void	two_sort(t_node **stk_a)
@@ -482,8 +580,9 @@ void	three_sort(t_node **stk_a)
 			mult_rots(ra, stk_a, rot);
 		else if (rot < 0)
 			mult_rots(rra, stk_a, -rot);
+		return ;
 	}
-	if (order <= 0)
+	if (!order)
 	{
 		sa(*stk_a);
 		three_sort(stk_a);
@@ -491,54 +590,168 @@ void	three_sort(t_node **stk_a)
 		
 }
 	
-
-//void	four_sort(t_node **stk_a, t_node **stk_b, int num_nodes[2])
-//{
-//	return ;
-//}
-//void	five_sort(t_node **stk_a, t_node **stk_b, int num_nodes[2])
-//{
-//	return ;
-//}
-
-void	manual_sort(t_node **stk_a, t_node **stk_b, int num_nodes[2])
+void	manual_sort(t_node **stk_a, int num_nodes[2])
 {
-	if (*stk_b == NULL)
-		num_nodes[STK_B] = 0;
 	if (num_nodes[STK_A] == 1)
 		return ;
 	else if (num_nodes[STK_A] == 2)
 		two_sort(stk_a);
 	else if (num_nodes[STK_A] == 3)
 		three_sort(stk_a);
-//	else if (num_nodes[STK_A] == 4)
-//		four_sort(stk_a, stk_b, num_nodes);
-//	else if (num_nodes[STK_A] == 5)
-//		five_sort(stk_a, stk_b, num_nodes);
 }
 
-//int	best_move(t_node *stk_a, t_node *stk_b, int num_nodes[2])
-//{
-//	int	temp;
-//
-//	temp = num_nodes[STK_A];
-//	
-//	while (temp-- > 0)
-//	{
-//		
-//}
+int	choose_btween(t_node **stk_b, t_node *node)
+{
+	int	dir;
+	int	rev;
+	t_node	*b;
 
-//void	turk_sort(t_node **stk_a, t_node **stk_b, int num_nodes[2])
-//{
-//	int	temp;
-//	int	*moves;
+	dir = 0;
+	rev = 0;
+	b = *stk_b;
+	while (!(b->data > node->data) || !(b->prev->data < node->data))
+	{
+		b = b->next;
+		dir++;
+	}
+	b = *stk_b;
+	while (!(b->data > node->data) || !(b->prev->data < node->data))
+	{
+		b = b->prev;
+		rev++;
+	}
+	if (dir < rev)
+		return (dir);
+	else
+		return (-rev);
+}
+
+int	get_btween(t_node **stk_b, t_node *node)
+{
+	t_node	*b;
+	int	b_moves;
+	t_node	*val;
+
+	b = *stk_b;
+	b_moves = 0;
+	val = NULL;
+	if (is_min(node->data, b)) 
+		val = get_min(b);
+	else if (is_max(node->data, b))
+		val = get_max(b)->next;
+	if (val)
+	{
+		printf("entra siendo min o max\n");
+		b_moves = choose_rotation(stk_b, val);
+		printf("b_moves con val %d\n",  b_moves);
+	}
+	else
+	{
+		printf("entra sin ser min o max\n");
+		b_moves  = choose_btween(stk_b, node);
+		printf("b_moves normal %d\n",  b_moves);
+	}
+	return (b_moves);
+}
+
+int	abs(int	num)
+{
+	if (num < 0)
+		return (-num);
+	else
+		return (num);
+}
+
+int	*best_push(t_node **stk_a, t_node **stk_b, int num_nodes[2])
+{
+	int	least;
+	int	temp;
+	int	moves[2];
+	int	*best;
+	t_node	*node;
+
+	temp = num_nodes[STK_A];
+	node = *stk_a;
+	best = ft_calloc(2, sizeof(int));
+	while (temp-- > 0)
+	{
+		printf("\nstk_a: %d nodo:%d\n", (*stk_a)->data, node->data);
+		moves[STK_A] = choose_rotation(stk_a, node);
+		printf("moves a: %d\n", moves[STK_A]);
+		moves[STK_B] = get_btween(stk_b, node);
+		printf("moves b: %d\n", moves[STK_A]);
+		node = node->next;
+		if (!least)
+			least = abs(moves[STK_A]) + abs(moves[STK_B]);
+		if (moves[STK_A] > least)
+			break ;
+		if (abs(moves[STK_A]) + abs(moves[STK_B]) < least)
+		{
+			least = abs(moves[STK_A]) + abs(moves[STK_B]);
+			best[STK_A] = moves[STK_A];
+			best[STK_B] = moves[STK_B];
+		}
+		printf("best a:%d\n", best[STK_A]);
+		printf("best b:%d\n", best[STK_B]);
+	}
+	return (best);
+}
+
+void	sim_cases(int opt[2], t_node **stk_a, t_node **stk_b)
+{
+	if (opt[STK_A] > 0 && opt[STK_B] > 0)
+	{
+		trot(rr, stk_a, stk_b, opt);
+		return ;
+	}
+	if (opt[STK_A] < 0 && opt[STK_B] < 0)
+	{
+		trot(rrr, stk_a, stk_b, opt);
+		return ;
+	}
+}
+
+void	rem_rots(int opt[2], t_node **stk_a, t_node **stk_b)
+{
+		if (opt[STK_A] > 0)
+			mult_rots(ra, stk_a, opt[STK_A]);
+		else if (opt[STK_B] > 0)
+			mult_rots(rb, stk_b, opt[STK_B]);
+		else if (opt[STK_A] < 0) 
+			mult_rots(rra, stk_a, -opt[STK_A]);
+		else if (opt[STK_B] < 0)
+			mult_rots(rrb, stk_b, -opt[STK_B]);
+}
+
+void	turk_sort(t_node **stk_a, t_node **stk_b, int num_nodes[2])
+{
+	int	*opt;
 	
-//	temp = num_nodes[STK_A];
-//	push_two(stk_a, stk_b, num_nodes);
-//	while (num_nodes[STK_A] > 3)
-	//{
-//		best_move();
-//}
+	if (initially_ordered(stk_a))
+		return ;
+	push_two(stk_a, stk_b, num_nodes);
+	while (num_nodes[STK_A] > 3)
+	{
+		printf("entra a best_push\n");
+		opt = best_push(stk_a, stk_b, num_nodes);
+		printf("opt a: %d\n", opt[0]);
+		printf("opt b: %d\n", opt[1]);
+		sim_cases(opt, stk_a, stk_b);
+		rem_rots(opt, stk_a, stk_b);
+		printf("STACK A\n");
+		print_stack(stk_a);
+		printf("STACK B\n");
+		print_stack(stk_b);
+		pa(stk_a, stk_b, num_nodes);
+		printf("STACK A\n");
+		print_stack(stk_a);
+		printf("STACK B\n");
+		print_stack(stk_b);
+		free(opt);
+	}
+	//order_list(stk_a, stk_b, num_nodes);
+}
+
 int	main(int argc, char **argv)
 {
 
@@ -557,11 +770,11 @@ int	main(int argc, char **argv)
 	stk_b = NULL;
 	//para turkish_sort
 	if (num_nodes[STK_A] + num_nodes[STK_B] != argc -1)
-		return ((void)printf("Error\n"), 0);
-	if (num_nodes[STK_A] < 6)
-		manual_sort(&stk_a, &stk_b, num_nodes);
+	return ((void)printf("Error\n"), 0);
+	if (num_nodes[STK_A] < 4)
+		manual_sort(&stk_a, num_nodes);
 	else
-		//turk_sort(&stk_a, &stk_b, num_nodes);
+		turk_sort(&stk_a, &stk_b, num_nodes);
 	//temp = num_nodes[STK_A];
 	//while (temp-- > 0)
 	//{

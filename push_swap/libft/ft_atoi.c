@@ -6,7 +6,7 @@
 /*   By: cristian <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 22:57:49 by cristian          #+#    #+#             */
-/*   Updated: 2023/10/15 16:53:43 by cmanica-         ###   ########.fr       */
+/*   Updated: 2024/07/11 04:31:36 by cristian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,17 +36,3 @@ int	ft_atoi(const char *str)
 	}
 	return (num * neg);
 }
-/*
-#include <stdlib.h>
-#include <stdio.h>
-
-int main(void)
-{
-	char *str;
-
-	str = "   -+1234ab5678";
-	printf("%d \n", ft_atoi(str));
-// por algun motivo la funcion atoi original no parece funcionar con " " o "+"
-	printf("%d\n", atoi(str));
-}
-*/
