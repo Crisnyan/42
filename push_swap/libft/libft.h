@@ -6,7 +6,7 @@
 /*   By: cmanica- <cmanica-@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 16:19:40 by cmanica-          #+#    #+#             */
-/*   Updated: 2024/07/11 04:32:16 by cristian         ###   ########.fr       */
+/*   Updated: 2024/07/11 14:36:40 by cristian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ char	*ft_itoa(int n);
 char	*ft_strtrim(const char *s1, char const *set);
 char	*ft_strmapi(char const *s, char (*f) (unsigned int, char));
 char	**ft_split(char const *s, char c);
-void	*ft_bzero(void *b, size_t n);
+void	ft_bzero(void *b, size_t n);
 void	ft_putstr_fd(char *s, int fd);
 void	ft_putendl_fd(char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);

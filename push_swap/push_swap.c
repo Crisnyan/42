@@ -6,7 +6,7 @@
 /*   By: cristian <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:37:40 by cristian          #+#    #+#             */
-/*   Updated: 2024/07/11 04:37:17 by cristian         ###   ########.fr       */
+/*   Updated: 2024/07/11 19:15:59 by cristian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,6 +214,8 @@ void	print_stack(t_node **stack)
 	t_node	*head;
 	t_node	*ptr;
 
+	if (*stack == NULL)
+		return ((void)printf("NULL\n"));
 	head = *stack;
 	printf("%d\n", head->data);
 	ptr = head->next;
@@ -292,6 +294,8 @@ void	pa(t_node **head_a, t_node **head_b, int nums[2])
 	delete_node(head_a);
 	nums[STK_A]--;
 	nums[STK_B]++;
+	if (nums[STK_A] == 0)
+		*head_a = NULL;
 	printf("pa\n");
 }
 	
@@ -318,6 +322,8 @@ void	pb(t_node **head_a, t_node **head_b, int nums[2])
 	delete_node(head_b);
 	nums[STK_B]--;
 	nums[STK_A]++;
+	if (nums[STK_B] == 0)
+		*head_b = NULL;
 	printf("pb\n");
 }
 
@@ -383,6 +389,15 @@ void	push_two(t_node **head_a, t_node **head_b, int num_nodes[2])
 	}
 	printf("head A: %d\n", (*head_a)->data);
 	printf("head B: %d\n", (*head_b)->data);
+}
+
+int	same_sign(int n1, int n2)
+{
+	if (n1 < 0 && n2 < 0)
+		return (1);
+	else if (n1 > 0 && n2 > 0)
+		return (1);
+	return (0);
 }
 
 int	is_min(int num, t_node *stack)
@@ -455,6 +470,34 @@ t_node	*get_max(t_node *stack)
 	return (max_node);
 }
 
+int	calc_least(int	movs_a, int movs_b)
+{
+	int	sim;
+
+	sim = 0;
+	printf("mova: %d, movb: %d, sim: %d\n", movs_a, movs_b, sim);
+	if(movs_a > 0 && movs_b > 0)
+	{
+		while (movs_a > 0 && movs_b > 0)
+		{
+			movs_a--;
+			movs_b--;
+			sim++;
+		}
+	}
+	if(movs_a < 0 && movs_b < 0)
+	{
+		while (movs_a < 0 && movs_b < 0)
+		{
+			movs_a++;
+			movs_b++;
+			sim++;
+		}
+	}
+	printf("mova: %d, movb: %d, sim: %d\n", movs_a, movs_b, sim);
+	return (sim + abs(movs_a) + abs(movs_b));	
+}
+
 int	ordered(t_node *stack, t_node *min_node)
 {
 	t_node	*ptr;
@@ -512,13 +555,21 @@ void	trot(void (*s)(t_node **a, t_node **b), t_node **x, t_node **y, int *t)
 {
 	if (t[STK_A] < 0 && t[STK_B] < 0)
 	{
-		while (t[STK_B]++ > 0 && t[STK_A]++ > 0)
+		while (t[STK_B] < 0 && t[STK_A] < 0)
+		{
+			t[STK_A]++;
+			t[STK_B]++;
 			s(x, y);
+		}
 	}
 	if (t[STK_A] > 0 && t[STK_B] > 0)
 	{
-		while (t[STK_B]-- > 0 && t[STK_A]-- > 0)
+		while (t[STK_B] > 0 && t[STK_A] > 0)
+		{
+			t[STK_A]--;
+			t[STK_B]--;
 			s(x, y);
+		}
 	}
 }
 
@@ -609,17 +660,23 @@ int	choose_btween(t_node **stk_b, t_node *node)
 	dir = 0;
 	rev = 0;
 	b = *stk_b;
-	while (!(b->data > node->data) || !(b->prev->data < node->data))
+	while (!(b->data < node->data) || !(b->prev->data > node->data))
 	{
 		b = b->next;
 		dir++;
+		printf("dir es: %d\n", dir);
 	}
+	printf("va despues de: %d\n", b->prev->data);
+	printf("va antes de: %d\n", b->data);
 	b = *stk_b;
-	while (!(b->data > node->data) || !(b->prev->data < node->data))
+	while (!(b->data < node->data) || !(b->prev->data > node->data))
 	{
 		b = b->prev;
 		rev++;
+		printf("rev es: %d\n", rev);
 	}
+	printf("va despues de: %d\n", b->prev->data);
+	printf("va antes de: %d\n", b->data);
 	if (dir < rev)
 		return (dir);
 	else
@@ -636,9 +693,19 @@ int	get_btween(t_node **stk_b, t_node *node)
 	b_moves = 0;
 	val = NULL;
 	if (is_min(node->data, b)) 
-		val = get_min(b);
+	{
+		printf("ES MIN\n");
+		val = get_min(b)->next;
+		printf("va despues de: %d\n", val->prev->data);
+		printf("va antes de: %d\n", val->data);
+	}
 	else if (is_max(node->data, b))
-		val = get_max(b)->next;
+	{
+		printf("ES MAX\n");
+		val = get_max(b);
+		printf("va despues de: %d\n", val->prev->data);
+		printf("va antes de: %d\n", val->data);
+	}
 	if (val)
 	{
 		printf("entra siendo min o max\n");
@@ -651,7 +718,79 @@ int	get_btween(t_node **stk_b, t_node *node)
 		b_moves  = choose_btween(stk_b, node);
 		printf("b_moves normal %d\n",  b_moves);
 	}
+	printf("b_moves final es: %d\n",  b_moves);
 	return (b_moves);
+}
+
+int	choose_btween_ordered(t_node **stk_a, t_node *node)
+{
+	int	dir;
+	int	rev;
+	t_node	*a;
+
+	dir = 0;
+	rev = 0;
+	a = *stk_a;
+	while (!(a->data > node->data) || !(a->prev->data < node->data))
+	{
+		a = a->next;
+		dir++;
+		printf("dir es: %d\n", dir);
+	}
+	printf("va despues de: %d\n", a->prev->data);
+	printf("va antes de: %d\n", a->data);
+	a = *stk_a;
+	while (!(a->data > node->data) || !(a->prev->data < node->data))
+	{
+		a = a->prev;
+		rev++;
+		printf("rev es: %d\n", rev);
+	}
+	printf("va despues de: %d\n", a->prev->data);
+	printf("va antes de: %d\n", a->data);
+	if (dir < rev)
+		return (dir);
+	else
+		return (-rev);
+}
+
+int	get_btween_ordered(t_node **stk_a, t_node *node)
+{
+	t_node	*a;
+	int	a_moves;
+	t_node	*val;
+
+	a = *stk_a;
+	a_moves = 0;
+	val = NULL;
+	if (is_min(node->data, a)) 
+	{
+		printf("ES MIN\n");
+		val = get_min(a);
+		printf("va despues de: %d\n", val->prev->data);
+		printf("va antes de: %d\n", val->data);
+	}
+	else if (is_max(node->data, a))
+	{
+		printf("ES MAX\n");
+		val = get_max(a)->next;
+		printf("va despues de: %d\n", val->prev->data);
+		printf("va antes de: %d\n", val->data);
+	}
+	if (val)
+	{
+		printf("entra siendo min o max\n");
+		a_moves = choose_rotation(stk_a, val);
+		printf("a_moves con val %d\n",  a_moves);
+	}
+	else
+	{
+		printf("entra sin ser min o max\n");
+		a_moves  = choose_btween_ordered(stk_a, node);
+		printf("a_moves normal %d\n",  a_moves);
+	}
+	printf("a_moves final es: %d\n",  a_moves);
+	return (a_moves);
 }
 
 int	abs(int	num)
@@ -673,27 +812,36 @@ int	*best_push(t_node **stk_a, t_node **stk_b, int num_nodes[2])
 	temp = num_nodes[STK_A];
 	node = *stk_a;
 	best = ft_calloc(2, sizeof(int));
+	least = -1;
 	while (temp-- > 0)
 	{
 		printf("\nstk_a: %d nodo:%d\n", (*stk_a)->data, node->data);
 		moves[STK_A] = choose_rotation(stk_a, node);
 		printf("moves a: %d\n", moves[STK_A]);
 		moves[STK_B] = get_btween(stk_b, node);
-		printf("moves b: %d\n", moves[STK_A]);
+		printf("moves b: %d\n", moves[STK_B]);
 		node = node->next;
-		if (!least)
-			least = abs(moves[STK_A]) + abs(moves[STK_B]);
-		if (moves[STK_A] > least)
-			break ;
-		if (abs(moves[STK_A]) + abs(moves[STK_B]) < least)
+		if (least < 0)
 		{
-			least = abs(moves[STK_A]) + abs(moves[STK_B]);
+			least = calc_least(moves[STK_A], moves[STK_B]);
+			printf("entra con least:%d\n", least);
 			best[STK_A] = moves[STK_A];
 			best[STK_B] = moves[STK_B];
+			printf("best a:%d\n", best[STK_A]);
+			printf("best b:%d\n", best[STK_B]);
 		}
-		printf("best a:%d\n", best[STK_A]);
-		printf("best b:%d\n", best[STK_B]);
+		if (calc_least(moves[STK_A], moves[STK_B]) < least)
+		{
+			
+			least = calc_least(moves[STK_A], moves[STK_B]);
+			printf("entra con least:%d\n", least);
+			best[STK_A] = moves[STK_A];
+			best[STK_B] = moves[STK_B];
+			printf("best a:%d\n", best[STK_A]);
+			printf("best b:%d\n", best[STK_B]);
+		}
 	}
+	printf("sale con least:%d\n", least);
 	return (best);
 }
 
@@ -713,15 +861,52 @@ void	sim_cases(int opt[2], t_node **stk_a, t_node **stk_b)
 
 void	rem_rots(int opt[2], t_node **stk_a, t_node **stk_b)
 {
+		if (opt[STK_A])
+		{
 		if (opt[STK_A] > 0)
 			mult_rots(ra, stk_a, opt[STK_A]);
-		else if (opt[STK_B] > 0)
-			mult_rots(rb, stk_b, opt[STK_B]);
 		else if (opt[STK_A] < 0) 
 			mult_rots(rra, stk_a, -opt[STK_A]);
+		}
+		if (opt[STK_B])
+		{
+		if (opt[STK_B] > 0)
+			mult_rots(rb, stk_b, opt[STK_B]);
 		else if (opt[STK_B] < 0)
 			mult_rots(rrb, stk_b, -opt[STK_B]);
+		}
 }
+
+void	order_list(t_node **stk_a, t_node **stk_b, int num_nodes[2])
+{
+	int	rot;
+	t_node	*min_node;
+
+	while (num_nodes[STK_B] > 0)
+	{
+		rot = get_btween_ordered(stk_a, *stk_b);
+		if (rot > 0)
+			mult_rots(ra, stk_a, rot);
+		else if (rot < 0)
+			mult_rots(rra, stk_a, -rot);
+		printf("STACK A\n");
+		print_stack(stk_a);
+		printf("STACK B\n");
+		print_stack(stk_b);
+		pb(stk_a, stk_b, num_nodes);
+		printf("STACK A\n");
+		print_stack(stk_a);
+		printf("STACK B\n");
+		print_stack(stk_b);
+	}
+	min_node = get_min(*stk_a);
+	rot = choose_rotation(stk_a, min_node);
+	if (rot > 0)
+		mult_rots(ra, stk_a, rot);
+	else if (rot < 0)
+		mult_rots(rra, stk_a, -rot);
+}
+		
 
 void	turk_sort(t_node **stk_a, t_node **stk_b, int num_nodes[2])
 {
@@ -734,9 +919,10 @@ void	turk_sort(t_node **stk_a, t_node **stk_b, int num_nodes[2])
 	{
 		printf("entra a best_push\n");
 		opt = best_push(stk_a, stk_b, num_nodes);
-		printf("opt a: %d\n", opt[0]);
-		printf("opt b: %d\n", opt[1]);
-		sim_cases(opt, stk_a, stk_b);
+		printf("opt a: %d\n", opt[STK_A]);
+		printf("opt b: %d\n", opt[STK_B]);
+		if (same_sign(opt[STK_A], opt[STK_B]))
+			sim_cases(opt, stk_a, stk_b);
 		rem_rots(opt, stk_a, stk_b);
 		printf("STACK A\n");
 		print_stack(stk_a);
@@ -749,7 +935,13 @@ void	turk_sort(t_node **stk_a, t_node **stk_b, int num_nodes[2])
 		print_stack(stk_b);
 		free(opt);
 	}
-	//order_list(stk_a, stk_b, num_nodes);
+	three_sort(stk_a);
+	printf("ENTRA EN ORDER LIST\n");
+	order_list(stk_a, stk_b, num_nodes);
+	printf("STACK A\n");
+	print_stack(stk_a);
+	printf("STACK B\n");
+	print_stack(stk_b);
 }
 
 int	main(int argc, char **argv)
@@ -768,30 +960,12 @@ int	main(int argc, char **argv)
 	if (stk_a == NULL)
 		return ((void)printf("Error\n"), 0);
 	stk_b = NULL;
-	//para turkish_sort
-	if (num_nodes[STK_A] + num_nodes[STK_B] != argc -1)
-	return ((void)printf("Error\n"), 0);
+	//para turk_sort
+//	if (num_nodes[STK_A] + num_nodes[STK_B] != argc -1)
+//		return ((void)printf("Error\n"), 0);
 	if (num_nodes[STK_A] < 4)
 		manual_sort(&stk_a, num_nodes);
 	else
 		turk_sort(&stk_a, &stk_b, num_nodes);
-	//temp = num_nodes[STK_A];
-	//while (temp-- > 0)
-	//{
-	//	printf("A: data in pos %d: %d\n", stk_a->pos, stk_a->data);
-	//	stk_a = stk_a->next;
-	//}
-	//temp = num_nodes[STK_B];
-	//while (temp-- > 0)
-	//{
-	//	printf("B: data in pos %d: %d\n", stk_b->pos, stk_b->data);
-	//	stk_b = stk_b->next;
-	//}
-	//temp = num_nodes[STK_A];
-	//while (temp-- > 0)
-	//{
-	//	stk_a = stk_a->prev;
-	//	printf("data in pos %d: %d\n", stk_a->pos, stk_a->data);
-	//}
 	return (0);
 }
